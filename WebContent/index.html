@@ -518,19 +518,22 @@
 					cxHeatmap.clusterVariables();
 				}
 				
-				cxHeatmap.setRGB();
-        		var m = 256 / cxHeatmap.indicatorBins;
-        		var l = cxHeatmap.blues;
-        		heatmapColors = [];
-        		for (var h = 0; h < m; h++) {
-                    heatmapColors.push(l[h])
-                }
+//				cxHeatmap.setRGB();
+//        		var m = 256 / cxHeatmap.indicatorBins;
+//        		var l = cxHeatmap.blues;
+//        		heatmapColors = [];
+//        		for (var h = 0; h < m; h++) {
+//                    heatmapColors.push(l[h])
+//                }
                 
-                heatmapColors.push("rgb(255,255,255)");
-                l = cxHeatmap.reds;
-                for (var h = m - 1; h >= 0; h--) {
-                    heatmapColors.push(l[h])
-                }
+//                heatmapColors.push("rgb(255,255,255)");
+//               l = cxHeatmap.reds;
+//                for (var h = m - 1; h >= 0; h--) {
+//                    heatmapColors.push(l[h])
+//                }
+			
+				heatmapColors = ['rgb(0,0,255)','rgb(7,7,255)','rgb(15,15,255)','rgb(23,23,255)','rgb(31,31,255)','rgb(39,39,255)','rgb(47,47,255)','rgb(55,55,255)','rgb(63,63,255)','rgb(71,71,255)','rgb(79,79,255)','rgb(87,87,255)','rgb(95,95,255)','rgb(103,103,255)','rgb(111,111,255)','rgb(119,119,255)','rgb(127,127,255)','rgb(135,135,255)','rgb(143,143,255)','rgb(151,151,255)','rgb(159,159,255)','rgb(167,167,255)','rgb(175,175,255)','rgb(183,183,255)','rgb(191,191,255)','rgb(199,199,255)','rgb(207,207,255)','rgb(215,215,255)','rgb(223,223,255)','rgb(231,231,255)','rgb(239,239,255)','rgb(247,247,255)',
+                				 'rgb(255,255,255)','rgb(255,247,247)','rgb(255,239,239)','rgb(255,231,231)','rgb(255,223,223)','rgb(255,215,215)','rgb(255,207,207)','rgb(255,199,199)','rgb(255,191,191)','rgb(255,183,183)','rgb(255,175,175)','rgb(255,167,167)','rgb(255,159,159)','rgb(255,151,151)','rgb(255,143,143)','rgb(255,135,135)','rgb(255,127,127)','rgb(255,119,119)','rgb(255,111,111)','rgb(255,103,103)','rgb(255,95,95)','rgb(255,87,87)','rgb(255,79,79)','rgb(255,71,71)','rgb(255,63,63)','rgb(255,55,55)','rgb(255,47,47)','rgb(255,39,39)','rgb(255,31,31)','rgb(255,23,23)','rgb(255,15,15)','rgb(255,7,7)','rgb(255,0,0)'];
 				
 				//Generating nodes and edges
 				var nodes = [];
