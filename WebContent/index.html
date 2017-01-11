@@ -11,8 +11,6 @@
 		<meta name="viewport"     	       content="user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, minimal-ui">
 		 
 		<!-- Load all .js and .css required -->
-<!-- 		<link rel="stylesheet" href="http://canvasxpress.org/css/canvasXpress.css"/> -->
-<!-- 		<script src="http://canvasxpress.org/js/canvasXpress.min.js"></script> -->
 		<script src="js/canvasXpress.min.js"></script>
 		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"/>
 		<link rel="stylesheet" href="css/sbg.css"/>
@@ -21,7 +19,7 @@
 		<script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>	
 		<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 		<script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
-		<link href="shared/bootstrap/css/bootstrap.min.css" rel="stylesheet" />		
+		<link href="css/bootstrap.min.css" rel="stylesheet" />		
 		<link rel="stylesheet" type="text/css" href="TableTools/css/dataTables.tableTools.css">
 		<script type="text/javascript" src="TableTools/js/dataTables.tableTools.js"></script>
 		<link rel="stylesheet" type="text/css" href="pcxn.css">
@@ -459,6 +457,9 @@
 //                 console.log(outputGenesetNames)
 //                 console.log(inputGeneSetNames)
 //                 console.log (correlationMatrix)
+// 				myColors = ['rgb(0,0,255)','rgb(7,7,255)','rgb(15,15,255)','rgb(23,23,255)','rgb(31,31,255)','rgb(39,39,255)','rgb(47,47,255)','rgb(55,55,255)','rgb(63,63,255)','rgb(71,71,255)','rgb(79,79,255)','rgb(87,87,255)','rgb(95,95,255)','rgb(103,103,255)','rgb(111,111,255)','rgb(119,119,255)','rgb(127,127,255)','rgb(135,135,255)','rgb(143,143,255)','rgb(151,151,255)','rgb(159,159,255)','rgb(167,167,255)','rgb(175,175,255)','rgb(183,183,255)','rgb(191,191,255)','rgb(199,199,255)','rgb(207,207,255)','rgb(215,215,255)','rgb(223,223,255)','rgb(231,231,255)','rgb(239,239,255)','rgb(247,247,255)',
+//                				 'rgb(255,255,255)','rgb(255,247,247)','rgb(255,239,239)','rgb(255,231,231)','rgb(255,223,223)','rgb(255,215,215)','rgb(255,207,207)','rgb(255,199,199)','rgb(255,191,191)','rgb(255,183,183)','rgb(255,175,175)','rgb(255,167,167)','rgb(255,159,159)','rgb(255,151,151)','rgb(255,143,143)','rgb(255,135,135)','rgb(255,127,127)','rgb(255,119,119)','rgb(255,111,111)','rgb(255,103,103)','rgb(255,95,95)','rgb(255,87,87)','rgb(255,79,79)','rgb(255,71,71)','rgb(255,63,63)','rgb(255,55,55)','rgb(255,47,47)','rgb(255,39,39)','rgb(255,31,31)','rgb(255,23,23)','rgb(255,15,15)','rgb(255,7,7)','rgb(255,0,0)'];
+				myColors = ['#0000ff','#0707ff','#0f0fff','#1717ff','#1f1fff','#2727ff','#2f2fff','#3737ff','#3f3fff','#4747ff','#4f4fff','#5757ff','#5f5fff','#6767ff','#6f6fff','#7777ff','#7f7fff','#8787ff','#8f8fff','#9797ff','#9f9fff','#a7a7ff','#afafff','#b7b7ff','#bfbfff','#c7c7ff','#cfcfff','#d7d7ff','#dfdfff','#e7e7ff','#efefff','#f7f7ff','#ffffff','#fff7f7','#ffefef','#ffe7e7','#ffdfdf','#ffd7d7','#ffcfcf','#ffc7c7','#ffbfbf','#ffb7b7','#ffafaf','#ffa7a7','#ff9f9f','#ff9797','#ff8f8f','#ff8787','#ff7f7f','#ff7777','#ff6f6f','#ff6767','#ff5f5f','#ff5757','#ff4f4f','#ff4747','#ff3f3f','#ff3737','#ff2f2f','#ff2727','#ff1f1f','#ff1717','#ff0f0f','#ff0707','#ff0000'];
 				var cnv4=document.getElementById('canvas1');
 				var ctx4=cnv4.getContext('2d');
 				ctx4.clearRect(0, 0, canvas1.width, canvas1.height);
@@ -486,7 +487,10 @@
 							"disableMenu" : true,
 							"disableToolbar" : true,
 							"resizable" : true,
-							"indicatorCenter" : "white"
+							"indicatorCenter" : "white",
+							"colorSpectrum": myColors
+							,
+							"colorSpectrumZeroValue": 0
 					},
 					{
 						'click' : function(o, e, t) {
@@ -520,23 +524,22 @@
 					cxHeatmap.clusterVariables();
 				}
 				
-//				cxHeatmap.setRGB();
-//        		var m = 256 / cxHeatmap.indicatorBins;
-//        		var l = cxHeatmap.blues;
-//        		heatmapColors = [];
-//        		for (var h = 0; h < m; h++) {
-//                    heatmapColors.push(l[h])
-//                }
+// 				cxHeatmap.setRGB();
+//         		var m = 256 / cxHeatmap.indicatorBins;
+//         		var l = cxHeatmap.blues;
+//         		heatmapColors = [];
+//         		for (var h = 0; h < m; h++) {
+//                     heatmapColors.push(l[h])
+//                 }
                 
-//                heatmapColors.push("rgb(255,255,255)");
-//                l = cxHeatmap.reds;
-//                for (var h = m - 1; h >= 0; h--) {
-//                    heatmapColors.push(l[h])
-//                }
-				
-				heatmapColors = ['rgb(0,0,255)','rgb(7,7,255)','rgb(15,15,255)','rgb(23,23,255)','rgb(31,31,255)','rgb(39,39,255)','rgb(47,47,255)','rgb(55,55,255)','rgb(63,63,255)','rgb(71,71,255)','rgb(79,79,255)','rgb(87,87,255)','rgb(95,95,255)','rgb(103,103,255)','rgb(111,111,255)','rgb(119,119,255)','rgb(127,127,255)','rgb(135,135,255)','rgb(143,143,255)','rgb(151,151,255)','rgb(159,159,255)','rgb(167,167,255)','rgb(175,175,255)','rgb(183,183,255)','rgb(191,191,255)','rgb(199,199,255)','rgb(207,207,255)','rgb(215,215,255)','rgb(223,223,255)','rgb(231,231,255)','rgb(239,239,255)','rgb(247,247,255)',
-                				 'rgb(255,255,255)','rgb(255,247,247)','rgb(255,239,239)','rgb(255,231,231)','rgb(255,223,223)','rgb(255,215,215)','rgb(255,207,207)','rgb(255,199,199)','rgb(255,191,191)','rgb(255,183,183)','rgb(255,175,175)','rgb(255,167,167)','rgb(255,159,159)','rgb(255,151,151)','rgb(255,143,143)','rgb(255,135,135)','rgb(255,127,127)','rgb(255,119,119)','rgb(255,111,111)','rgb(255,103,103)','rgb(255,95,95)','rgb(255,87,87)','rgb(255,79,79)','rgb(255,71,71)','rgb(255,63,63)','rgb(255,55,55)','rgb(255,47,47)','rgb(255,39,39)','rgb(255,31,31)','rgb(255,23,23)','rgb(255,15,15)','rgb(255,7,7)','rgb(255,0,0)'];
-				
+//                 heatmapColors.push("rgb(255,255,255)");
+//                 l = cxHeatmap.reds;
+//                 for (var h = m - 1; h >= 0; h--) {
+//                     heatmapColors.push(l[h])
+//                 }
+
+				heatmapColors = cxHeatmap.colorSpectrum;
+				console.log(heatmapColors);
 				//Generating nodes and edges
 				var nodes = [];
 				var inNetwork ={};				
