@@ -1,3 +1,8 @@
+* {
+ font-size: 100%;
+ font-family: Arial;
+}
+
 h1 {
     color: black;
     text-align: center;
@@ -20,12 +25,14 @@ body {
 	width: 550px;
 	height: 450px;
 	background: #ffffff;
+	float:right;
 }
 
 #form2 {
 	width: 550px;
 	height: 450px;
 	background: #ffffff;
+	float:right;
 }
 
 #button1, #button3 {
@@ -50,26 +57,35 @@ body {
     width: auto;
 }
 
-#divAnalysis1, #divAnalysis2 {
+#divAnalysis1, #divAnalysis2, #divExample {
+	width: 550px;
 	border-radius: 25px;
     background: #EEE;
     padding: 20px;
 }
 
 #canvas1{
-	border:solid gray 1px
-	position: absolute;
-/* 	height:100vh; */
-
+	margin-top:1px;
+	margin-right:15px;
 }
 
 
 #cy{
-	 border:solid gray 1px; 
-	 top:20px;
-	 left:30px;
-	 height:83vh;
-	 
+	border:3px solid #e7e7e7; 
+	border-radius: 0px;
+	height:84vh;
+	margin-top: 30px;
+}
+
+/* Add animation (fade in the popup) */
+@-webkit-keyframes fadeIn {
+    from {opacity: 0;} 
+    to {opacity: 1;}
+}
+
+@keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity:1 ;}
 }
 
 #textfieldGeneSet, 
@@ -185,81 +201,77 @@ input[type="range"]::-ms-tooltip {
  .selected {
       border: 1px solid #0000ff;
   }
-  
-/* New Heatmap things */
 
-/* disable text selection */
-svg *::selection {
-   background : transparent;
-}
-
-svg *::-moz-selection {
-   background:transparent;
-} 
-
-svg *::-webkit-selection {
-   background:transparent;
-}
-rect.selection {
-  stroke          : #333;
-  stroke-dasharray: 4px;
-  stroke-opacity  : 0.5;
-  fill            : transparent;
+.cybtnShape {
+  -webkit-border-radius: 28;
+  -moz-border-radius: 28;
+  border-radius: 28px;
+  color: #ffffff;
+  font-size: 14px;
+  background: #348fd9;
+  padding: 4px 14px 4px 14px;
+  text-decoration: none;
 }
 
-rect.cell-border {
-  stroke: #eee;
-  stroke-width:0.3px;   
+.cybtnShape:hover {
+  background: #3cb0fd;
+  background-image: -webkit-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: -moz-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: -ms-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: -o-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
+  text-decoration: none;
 }
 
-rect.cell-selected {
-  stroke: rgb(51,102,153);
-  stroke-width:0.5px;   
+.cybtnView {
+  -webkit-border-radius: 28;
+  -moz-border-radius: 28;
+  border-radius: 28px;
+  color: #ffffff;
+  font-size: 14px;
+  background: #a200a2;
+  padding: 4px 14px 4px 14px;
+  text-decoration: none;
 }
 
-rect.cell-hover {
-  stroke: #F00;
-  stroke-width:0.3px;   
+.cybtnView:hover {
+  background: #3cb0fd;
+  background-image: -webkit-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: -moz-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: -ms-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: -o-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
+  text-decoration: none;
 }
 
-text.mono {
-  font-size: 9pt;
-  font-family: Consolas, courier;
-  fill: #aaa;
+.cybtnSave {
+  -webkit-border-radius: 28;
+  -moz-border-radius: 28;
+  border-radius: 28px;
+  color: #ffffff;
+  font-size: 14px;
+  background: #008080;
+  padding: 4px 14px 4px 14px;
+  text-decoration: none;
 }
 
-text.text-selected {
-  fill: #000;
+.cybtnSave:hover {
+  background: #3cb0fd;
+  background-image: -webkit-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: -moz-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: -ms-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: -o-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
+  text-decoration: none;
 }
 
-text.text-highlight {
-  fill: #c00;
-}
-text.text-hover {
-  fill: #00C;
-}
-#tooltip {
-  position: absolute;
-  padding: 10px;
-  background-color: white;
-  -webkit-border-radius: 10px;
-  -moz-border-radius: 10px;
-  border-radius: 10px;
-  -webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
-  -moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
-  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
-  pointer-events: none;
+.button-tiny {
+	font-size:14px;
 }
 
-#tooltip.hidden {
-  display: none;
-}
-
-#tooltip p {
-  margin: 0;
-  font-family: sans-serif;
-  font-size: 12px;
-  line-height: 20px;
-}
-    
-
+.autocomplete-suggestions { border: 1px solid #999; background: #FFF; overflow: auto; }
+.autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }
+.autocomplete-selected { background: #F0F0F0; }
+.autocomplete-suggestions strong { font-weight: normal; color: #3399FF; }
+.autocomplete-group { padding: 2px 5px; }
+.autocomplete-group strong { display: block; border-bottom: 1px solid #000; }
