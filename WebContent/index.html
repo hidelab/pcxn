@@ -75,8 +75,11 @@
                 sizeCanvas();
                 if(explore) {
 					$("#form1").hide();
+					$("#extraOptions").hide();
 				} else {
 					$("#form2").hide();
+					$("#extraOptions").show();
+					
 				}
 				$(".result").hide();
     			var parms = {geneSetCollection :"all"};
@@ -1231,19 +1234,19 @@
 			
 			$(document).ready(function(){
 			    $("#upgenesets").popover({
-			        title: '<h5 class="custom-title"><span class="glyphicon glyphicon-info-sign"></span> Input Example (paper)</h5>',
-			        content : "<p>PID_HIF2PATHWAY <br> PID_PS1_PATHWAY <br> PID_RB_1PATHWAY <br> KEGG_FOCAL_ADHESION </p>",
+			        title: '<h5 class="custom-title"><span class="glyphicon glyphicon-info-sign"></span> Format Example</h5>',
+			        content : "<p>PID_HIF2PATHWAY <br> PID_PS1_PATHWAY <br> PID_RB_1PATHWAY</p>",
 			        html: true,
-			        placement: "left"
+			        placement: "right"
 			    }); 
 			});
 				
 			$(document).ready(function(){
 			    $("#downgenesets").popover({
-			        title: '<h5 class="custom-title"><span class="glyphicon glyphicon-info-sign"></span> Input Example (paper)</h5>',
-			        content : "<p>PID_HIF2PATHWAY<br> PID_PS1_PATHWAY<br> PID_RB_1PATHWAY<br> KEGG_FOCAL_ADHESION</p>",
+			        title: '<h5 class="custom-title"><span class="glyphicon glyphicon-info-sign"></span> Format Example</h5>',
+			        content : "<p>KEGG_FOCAL_ADHESION<br> KEGG_NOTCH_SIGNALING_PATHWAY<br> PID_SMAD2_3NUCLEAR_PATHWAY</p>",
 			        html: true,
-			        placement: "left"
+			        placement: "right"
 			        
 			    }); 
 			});
@@ -1251,11 +1254,11 @@
 			$(document).ready(function(){
 			    $("#findGeneset").popover({
 // 			        title : "<b>Hint</b>",
-			    	content : '<div id="fgPop"><input class="btn btn-primary btn-xs" id="add0Button" onclick="addTopheno0();" value="Add to phenotype 0"></input><input class="btn btn-primary btn-xs" id="add1Button" onclick="addTopheno1();" value="Add to phenotype 1"></input><input class="btn btn-primary btn-xs" id="exitButton" onclick="exitAdd();" style="width:20px" value="X"></input></div>',
+			    	content : '<div id="fgPop"><input class="button button-rounded button-tiny" id="add0Button" onclick="addTopheno0();" value="Add to phenotype 0" style="width:160px;padding-right:10px;padding-left:10px;"></input><input class="button button-rounded button-tiny" id="add1Button" onclick="addTopheno1();" value="Add to phenotype 1" style="width:160px;padding-right:10px;padding-left:10px;"></input><input class="button button-rounded button-tiny" id="exitButton" onclick="exitAdd();" style="width:30px;padding:2px;" value="X"></input></div>',
 			    	trigger: "manual",
 			    	html: true
 			    }); 
-			    $("#findGeneset").on("show.bs.popover", function(){ $(this).data("bs.popover").tip().css("max-width", "600px"); });
+			    $("#findGeneset").on("show.bs.popover", function(){ $(this).data("bs.popover").tip().css("max-width", "700px"); });
 			});
 
 			$(document).ready(function(){
@@ -1288,7 +1291,7 @@
 				        title: '<b>How to <i>Explore</i></b>',
 				        placement: "top",
 				        trigger: "hover",
-				        content : "- Select geneset collection<br>- Select specific geneset (dropdown)<br>- Change the numeral inputs (if needed)<br>- Press <i>Go</i>",
+				        content : "- Select geneset collection<br>- Select specific geneset (dropdown)<br>- Adjust parameters (if needed)<br>- Press <i><b>Go</b></i>",
 				        html: true,
 				        container: "body"
 				    }); 
@@ -1300,7 +1303,7 @@
 				        title: '<b>How to <i>Analyze</i></b>',
 				        placement: "top",
 				        trigger: "hover",
-				        content : "- Input genesets for each phenotype <br>- Change the numeral values and clustering method(if needed)<br>- Select the correct geneset collection<br>- Press <i>Go</i>",
+				        content : "- Select the correct geneset collection<br>- Input genesets for each phenotype <br>- Adjust parameters (if needed)<br>- Press <i><b>Go</b></i>",
 				        html: true,
 				        container: "body"
 				    });
@@ -1321,6 +1324,27 @@
 				else if (originDBname == "MSigDBC2CP") {return mSigDBC2CPGeneSets;}
 				else if (originDBname == "MSigDBC5") {return mSigDBC5GeneSets;}
 			}
+			
+			function runExample() {
+				var example_Collection = $("#selectGeneSetCollection");
+				example_Collection.val("MSigDBC2CP");
+				document.getElementById("upgenesets").value = 'KEGG_NOTCH_SIGNALING_PATHWAY\nPID_ANGIOPOIETIN_RECEPTOR_PATHWAY\nPID_RB_1PATHWAY\nPID_PS1_PATHWAY';
+				document.getElementById("downgenesets").value = 'REACTOME_A_TETRASACCHARIDE_LINKER_SEQUENCE_IS_REQUIRED_FOR_GAG_SYNTHESIS\nREACTOME_YAP1_AND_WWTR1_TAZ_STIMULATED_GENE_EXPRESSION\nKEGG_DORSO_VENTRAL_AXIS_FORMATION\nKEGG_FOCAL_ADHESION';
+				document.getElementById("inputTopN").value = 5;
+				send();
+			}
+			
+			$(document).ready(function(){
+			    $("#divExample").popover({
+				        title: '<b>Analysis Information</b>',
+				        placement: "top",
+				        trigger: "hover",
+				        content : "<b>Collection used</b>:<br>MSigDB C5 GO BP<br><b>Phenotype 1 gene sets</b>: REACTOME_YAP1_AND_WWTR1_TAZ_STIMULATED_GENE_EXPRESSION<br>KEGG_DORSO_VENTRAL_AXIS_FORMATION<br>KEGG_FOCAL_ADHESION<br><b>Phenotype 1 gene sets</b>: REACTOME_YAP1_AND_WWTR1_TAZ_STIMULATED_GENE_EXPRESSION<br>KEGG_DORSO_VENTRAL_AXIS_FORMATION<br>KEGG_FOCAL_ADHESION<br><b>Top correlated gene sets:</b><br>5<br><b>Clustering method:</b><br>Complete Linkage",
+				        html: true,
+				        container: "body"
+				    }); 
+			    $("#divExample").on("show.bs.popover", function(){ $(this).data("bs.popover").tip().css("max-width", "600px"); });
+			});
 			
 		</script>
 </head>
@@ -1346,20 +1370,20 @@
 		<div class="row" id="divInput">
 			<div class="col-sm-5 col-md-offset-1">
 				<form id="form2" name="form2" class="well">
-					<label for="inputTopN2" id="findLabel2" style="margin-bottom: 16px;">Find top</label> <input type="text" id="inputTopN2" value="10" style="border-radius:2px;"/>
+					<label for="inputTopN2" id="findLabel2" style="margin-bottom: 26px;margin-top: 30px;">Find top</label> <input type="text" id="inputTopN2" value="10" style="border-radius:2px;"/>
 					<label> gene sets</label><br>
 					<label>Correlated with</label><br>
 					<input type="radio" id="radioMSigDBH" name="form2geneset" value="radioMSigDBH" style="border-radius:2px;" checked>Select a gene set from MSigDB H (Hallmark gene sets) <br><select id="selectMSigDBH" size="1" style="margin-bottom:5px;"></select><br>
 					<input type="radio" id="radioMSigDBC2CP" name="form2geneset" value="radioMSigDBC2CP" style="border-radius:2px;" checked>Select a gene set from MSigDB C2 CP (Canonical pathways) <br><select id="selectMSigDBC2CP" size="1" style="margin-bottom:5px;"></select><br>
 					<input type="radio" id="radioMSigDBC5" name="form2geneset" value="radioMSigDBC5" style="border-radius:2px;">Select a gene set from MSigDB C5 GO BP gene sets <br><select id="selectMSigDBC5" size="1" style="margin-bottom:5px;"></select><br>
 					<input type="radio" id="radioPathprint" name="form2geneset" value="radioPathprint" style="border-radius:2px;">Select a gene set from Pathprint <br> <select id="selectPathprint" size="1" style="margin-bottom:5px;"></select><br> 
-					<input type="radio" id="radioSearchGeneSet" name="form2geneset" value="radioSearchGeneSet">Search a gene set <input id="textfieldGeneSet" style="border-radius:2px;margin-bottom: 20px;"><br>
+					<input type="radio" id="radioSearchGeneSet" name="form2geneset" value="radioSearchGeneSet">Search a gene set <input id="textfieldGeneSet" style="border-radius:2px;margin-bottom: 30px;"><br>
 <!-- 					<input type="radio" id="radioSearchGeneSet" name="form2geneset" value="radioSearchGeneSet">Search a gene set <input id="textfieldGeneSet" onkeypress="hideOptionsAndResults()"  style="border-radius:2px;margin-bottom: 20px;"><br> -->
 					<label id="label1" for="inputCorrelation2" style="margin-bottom: 13px;"> with absolute correlation coefficient greater than </label><input type="text" id="inputCorrelation2" value="0.05" style="border-radius:2px;margin-left:2px;"/><br>
-					<label id="label2" for="inputpValue2" style="margin-bottom: 13px;">and p-value less than</label><input type="text" id="inputpValue2" value="0.05" style="border-radius:2px;margin-left:2px;"/><input type="button" class="button-tiny button-rounded button-raised button-action" id="button3" value=" GO "	onclick="javascript:sendForm2();" style="float:right;margin-right:9px;height:25px;padding-left:5px;padding-right:5px;margin-top:32px;" /> <input  class="button-tiny button-rounded button-raised button-caution"type="reset" id="button4" value=" Reset " style="float:right;height:25px;padding-left:5px;padding-right:5px;margin-top:32px;" /> 
+					<label id="label2" for="inputpValue2" style="margin-bottom: 13px;">and p-value less than</label><input type="text" id="inputpValue2" value="0.05" style="border-radius:2px;margin-left:2px;"/><input type="button" class="button-tiny button-rounded button-raised button-action" id="button3" value=" GO "	onclick="javascript:sendForm2();" style="float:right;margin-right:9px;height:25px;padding-left:5px;padding-right:5px;margin-top:65px;" /> <input  class="button-tiny button-rounded button-raised button-caution"type="reset" id="button4" value=" Reset " style="float:right;height:25px;padding-left:5px;padding-right:5px;margin-top:65px;" /> 
 				</form>
 				<form id="form1" name="form1" class="well"> 
-					<label for="selectGeneSetCollection" style="margin-bottom: 13px;">Gene set collection: </label>
+					<label for="selectGeneSetCollection" style="margin-bottom: 13px;">In gene set collection: </label>
 					<select id="selectGeneSetCollection" size="1" style="height: 25px;border-radius:2px;">
 						<option value="pathprint" selected="selected">Pathprint</option>
 						<option value="MSigDBH">MSigDB H (Hallmark gene sets)</option>
@@ -1439,10 +1463,8 @@
 					</p>
 				</div>
 <!-- 				<div class="col-sm-12"><br></div> -->
-				<div class="col-sm-12 well" style="border-radius: 4px;" id="divExample">
-					<h4><p>Example Tab</p></h4>
-					<p>Text about the example coming from the paper. Maybe some pictures and details about the data.</p>
-				</div>
+				<input class="col-sm-12 well button" type="button" value="Run Example Analysis" onclick="runExample();" style="border-radius:4px;min-height:131px;font-size: x-large;" id="divExample">
+				</input>
 			</div>
 		</div>
 		<div class="row" id="divShareButtons">
@@ -1658,13 +1680,16 @@
 			if (e.target.id == "radioAnalysis1") {
 				$("#form1").hide();
 				$("#form2").show();	
+				$("#extraOptions").hide();
 				localStorage.setItem("explore", true);
 				checkLocalStorage();		
 			} else if (e.target.id == "radioAnalysis2") {
 				$("#form2").hide();
 				$("#form1").show();
+				$("#extraOptions").show();
 				localStorage.setItem("explore", false);
 				checkLocalStorage();
+				
 			} else {
 				alert("Error. Please contact W.Wei@sheffield.ac.uk");
 			}
