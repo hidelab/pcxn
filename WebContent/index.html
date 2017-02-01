@@ -64,11 +64,12 @@
 // 			var originDBname = "MSigDBC2CP";
 			var originDB = [];
 
-			localStorage.clear();
+// 			localStorage.clear();
 			
 			// Handler for Explore/Analyze decision
 			$(document).ready(function(){
 				localStorage.setItem("currentCollection", 'MSigDBC2CP');
+				document.getElementById("extraSelectCollection").value = localStorage.getItem("currentCollection");
 				// Access current domain's local Storage object. 
 				var tmp = localStorage.getItem("explore");
     			if (tmp===null) {
@@ -359,8 +360,13 @@
     		};
 			
     		// Handler for geneset choice, after "GO"
-			function handleFormResponse(response) {	
-    			
+			function handleFormResponse(response) {
+				$('#upgenesets').popover('hide');
+				$('#downgenesets').popover('hide');
+    			if (adjustCollection() !== 'ok') {					
+    				alert(adjustCollection());
+					return;
+				}
     			// Setting Selected values in sliders
 				document.getElementById("coefficientText").value = corrCutOffValue;
 				document.getElementById("pvalueText").value = pCutOffValue;
@@ -369,7 +375,7 @@
 				if(!response) return;
 				formResponse = response;
 				if (formResponse.length==0){
-					alert("None of your gene set names match those in the current database. Make sure you used the correct collections of gene sets. (The database is still in development, please contact W.Wei@sheffield.ac.uk to help the development of the database)");
+					alert("None of your gene set names match those in the current database. Please switch to: " + localStorage.getItem("selectGeneSetCollection"));
 					return;
 				}
 				
@@ -388,7 +394,7 @@
 				var inputGeneSetNames = [];
 				inputGeneSetNames = geneSetsValue.split("\n");
 				
-				var alertMessage =  " not match those in the current database:\n";
+				var alertMessage =  " empty.\n";
 				var upperCaseOutputGenesetNames = [];
 				for (var j = 0; j < outputGenesetNames.length; ++j){
 					upperCaseOutputGenesetNames[j] = outputGenesetNames[j].toUpperCase();
@@ -403,11 +409,11 @@
 				}
 					
 				if (numberOfUnMatchedinputGenesets > 0) {
-					var do_does = "do";
-					if (numberOfUnMatchedinputGenesets ==1) {do_does = "does";}					
+					var do_does = "are";
+					if (numberOfUnMatchedinputGenesets ==1) {do_does = "is";}					
 					alertMessage = numberOfUnMatchedinputGenesets + " of your gene set names " + do_does + alertMessage;
-					alertMessage = alertMessage + "The database is still in development."
-					alertMessage = alertMessage + "\nPlease contact W.Wei@sheffield.ac.uk to help the development of the database."
+// 					alertMessage = alertMessage + "The database is still in development."
+// 					alertMessage = alertMessage + "\nPlease contact W.Wei@sheffield.ac.uk to help the development of the database."
 					alert(alertMessage);
 					return;
 				}
@@ -1326,8 +1332,8 @@
 					document.getElementById("extraSelectCollection").value = localStorage.getItem("currentCollection"); // "this" is the changed one
 // 				    originDBname = this.value;
 // 					alert(originDBname);
-				    document.getElementById("upgenesets").value = '';
-				    document.getElementById("downgenesets").value = '';
+// 				    document.getElementById("upgenesets").value = '';
+// 				    document.getElementById("downgenesets").value = '';
 	 				$( "#findGeneset" ).devbridgeAutocomplete({
 						lookup: availableCollection(),
 						onSelect: function (suggestion) {
@@ -1453,6 +1459,7 @@
 				else if (document.getElementById("selectGeneSetCollection").value == "MSigDBH") {return mSigDBHGeneSets;}
 				else if (document.getElementById("selectGeneSetCollection").value == "MSigDBC2CP") {return mSigDBC2CPGeneSets;}
 				else if (document.getElementById("selectGeneSetCollection").value == "MSigDBC5") {return mSigDBC5GeneSets;}
+				else if (document.getElementById("-").value == "MSigDBC5") {return availableGenesets;}
 			}
 			
 			function runExample() {
@@ -1475,6 +1482,55 @@
 				    }); 
 			    $("#divExample").on("show.bs.popover", function(){ $(this).data("bs.popover").tip().css("max-width", "600px"); });
 			});
+			
+			//returns 'ok' if all gene sets belong to the same collection (and adjusts the collection if needed), otherwise it returns the collection of each gene set used
+			function adjustCollection() {
+				var pathprintGeneSetsUpperCase = pathprintGeneSets.map(function(x){ return x.toUpperCase() })
+				var col = document.getElementById("selectGeneSetCollection").value;
+				var upLines = document.getElementById("upgenesets").value.split('\n');
+				upLines = upLines.filter(function(entry) { return /\S/.test(entry); });
+				var upCols = [];  
+				for(var i = 0;i < upLines.length;i++){
+				    if(mSigDBC2CPGeneSets.indexOf(upLines[i]) >=0){upCols.push('MSigDBC2CP\t');}
+				    else if(pathprintGeneSetsUpperCase.indexOf(upLines[i]) >=0){upCols.push('pathprint\t\t');}
+				    else if(mSigDBC5GeneSets.indexOf(upLines[i]) >=0){upCols.push('MSigDBC5\t');}
+				    else if(mSigDBHGeneSets.indexOf(upLines[i]) >=0){upCols.push('MSigDBH\t\t');}
+				    else {upCols.push('None\t\t')}
+				}
+				var downLines = document.getElementById("downgenesets").value.split('\n');
+				downLines = downLines.filter(function(entry) { return /\S/.test(entry); });
+				var downCols = [];
+				for(var j = 0;j < downLines.length;j++){
+					
+				    if(mSigDBC2CPGeneSets.indexOf(downLines[j]) >=0){downCols.push('MSigDBC2CP\t')}
+				    else if(pathprintGeneSetsUpperCase.indexOf(downLines[j]) >=0){downCols.push('pathprint\t\t')}
+				    else if(mSigDBC5GeneSets.indexOf(downLines[j]) >=0){downCols.push('MSigDBC5\t')}
+				    else if(mSigDBHGeneSets.indexOf(downLines[j]) >=0){downCols.push('MSigDBH\t\t')}
+				    else {downCols.push('None\t\t')}
+				}
+				var totalLines = upLines.concat(downLines);
+				var totalCols = upCols.concat(downCols);
+
+// 				var inputCol = '';
+				var flag = false;
+			    for(var i = 1; i < totalCols.length; i++){if((totalCols[i] !== totalCols[0]) || (totalCols[i] == 'None\t\t\t\t\t') || (totalCols[0] == 'NNone\t\t\t\t\t')){flag = true;}}
+				if (flag){
+					var tmp = 'INCORRECT GENE SET INPUT/s\n\nPhenotype 0\n-----------------\n';
+					for (var i = 0;i < upLines.length;i++) {
+						tmp += upCols[i] + '->  ' + upLines[i] + '\n';
+					}
+					tmp += '\nPhenotype 1\n-----------------\n';
+					for (var i = 0;i < downLines.length;i++) {
+						tmp += downCols[i] + '->  ' + downLines[i] + '\n';
+					}
+					return tmp;
+				}else{
+					if(col !== totalCols[0]) {localStorage.setItem("selectGeneSetCollection",totalCols[0]);}	
+					return 'ok';
+				}
+			}		
+			
+			
 			
 		</script>
 </head>
@@ -1515,7 +1571,7 @@
 				<form id="form1" name="form1" class="well"> 
 					<label for="selectGeneSetCollection" style="margin-bottom: 13px;">In gene set collection: </label>
 					<select id="selectGeneSetCollection" size="1" style="height: 25px;border-radius:2px;">
-						<option value="-">-</option>
+						<option value="-" selected="selected">-</option>
 						<option value="MSigDBC2CP">MSigDB C2 CP (Canonical pathways)</option>
 						<option value="pathprint">Pathprint</option>
 						<option value="MSigDBH">MSigDB H (Hallmark gene sets)</option>
