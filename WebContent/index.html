@@ -6,7 +6,7 @@
 <meta property="og:url"			content="http://pcxn.org:8080/index.html" />
 <meta property="og:type"		content="website" />
 <meta property="og:title"		content="PCxN The Pathway Co-Activity Map" />
-<meta property="og:description"	content="A database for correlation of pathways/gene sets" />
+<meta property="og:description"		content="A database for correlation of pathways/gene sets" />
 <meta property="og:image"		content="http://pcxn.org:8080/pcxnscreenshot1.png" />
 <meta name="viewport"			content="user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, minimal-ui">
 
@@ -48,7 +48,7 @@
 			var pathprintGeneSets = [];
 			var mSigDBC2CPGeneSets = [];
 			var mSigDBC5GeneSets = [];
-		    var mSigDBHGeneSets = [];
+		    	var mSigDBHGeneSets = [];
 			var maxCorrInResponse = 0;
 			var minPValueInResponse = 1;
 			var maxCorrInResponseWithQuery = 0;
@@ -363,7 +363,14 @@
 			function handleFormResponse(response) {
 				$('#upgenesets').popover('hide');
 				$('#downgenesets').popover('hide');
-    			if (adjustCollection() !== 'ok') {					
+				
+				// Empty check
+				if ((document.getElementById("upgenesets").value == '')&&(document.getElementById("downgenesets").value == '')&&(document.getElementById("radioAnalysis2").checked == true)) {
+					alert("Input is empty. Please select a collection and fill in your gene set/s per phenotype");
+					return;
+				}
+				
+    			if ((adjustCollection() !== 'ok') && (document.getElementById("radioAnalysis2").checked == true)) {					
     				alert(adjustCollection());
 					return;
 				}
@@ -374,8 +381,8 @@
 				// Get unique geneset names
 				if(!response) return;
 				formResponse = response;
-				if (formResponse.length==0){
-					alert("None of your gene set names match those in the current database. Please switch to: " + localStorage.getItem("selectGeneSetCollection"));
+				if ((formResponse.length==0) &&(document.getElementById("radioAnalysis2").checked == true)){
+					alert("Your gene set names do not match the current collection. Please switch to: " + localStorage.getItem("selectGeneSetCollection"));
 					return;
 				}
 				
@@ -399,24 +406,28 @@
 				for (var j = 0; j < outputGenesetNames.length; ++j){
 					upperCaseOutputGenesetNames[j] = outputGenesetNames[j].toUpperCase();
 				}
-				var numberOfUnMatchedinputGenesets = 0;
-				for ( var i = 0; i < inputGeneSetNames.length; ++i){
-					var upperCaseInputGeneSetName = inputGeneSetNames[i].trim().toUpperCase();
-					if (upperCaseOutputGenesetNames.indexOf(upperCaseInputGeneSetName) < 0) {
-						alertMessage = alertMessage + inputGeneSetNames[i] + "\n"; 
-						numberOfUnMatchedinputGenesets++;
-					}
-				}
-					
-				if (numberOfUnMatchedinputGenesets > 0) {
-					var do_does = "are";
-					if (numberOfUnMatchedinputGenesets ==1) {do_does = "is";}					
-					alertMessage = numberOfUnMatchedinputGenesets + " of your gene set names " + do_does + alertMessage;
-// 					alertMessage = alertMessage + "The database is still in development."
-// 					alertMessage = alertMessage + "\nPlease contact W.Wei@sheffield.ac.uk to help the development of the database."
-					alert(alertMessage);
-					return;
-				}
+				
+// 				This was handling empty lines before				
+// 				var numberOfUnMatchedinputGenesets = 0;
+// 				for ( var i = 0; i < inputGeneSetNames.length; ++i){
+// 					var upperCaseInputGeneSetName = inputGeneSetNames[i].trim().toUpperCase();
+// 					if (upperCaseOutputGenesetNames.indexOf(upperCaseInputGeneSetName) < 0) {
+// 						alertMessage = alertMessage + inputGeneSetNames[i] + "\n"; 
+// 						numberOfUnMatchedinputGenesets++;
+// 					}
+// 				}				
+// 				if (numberOfUnMatchedinputGenesets > 0) {
+// 					var do_does = "are";
+// 					if (numberOfUnMatchedinputGenesets ==1) {do_does = "is";}					
+// 					alertMessage = numberOfUnMatchedinputGenesets + " of your gene set names " + do_does + alertMessage;
+// // 					alertMessage = alertMessage + "The database is still in development."
+// // 					alertMessage = alertMessage + "\nPlease contact W.Wei@sheffield.ac.uk to help the development of the database."
+// 					alert(alertMessage);
+// 					return;
+// 				}
+
+				// Removing empty lines
+				inputGeneSetNames = inputGeneSetNames.filter(function(entry) { return /\S/.test(entry); });
 				
 				displayResults ();				
 				outputGenesetNames.sort();
@@ -1228,12 +1239,14 @@
 				else {document.getElementById('divLegend').style.display = 'none';}
 			}
 			
+			// Add searched gene set to phenotype 0
 			function addTopheno0() {
 				if (document.getElementById("upgenesets").value == "") {document.getElementById("upgenesets").value += document.getElementById("findGeneset").value;}
 				else {document.getElementById("upgenesets").value += '\n' + document.getElementById("findGeneset").value;}
 				$('#findGeneset').popover('hide');
 			}
 
+			// Add searched gene set to phenotype 1
 			function addTopheno1() {
 				if (document.getElementById("downgenesets").value == "") {document.getElementById("downgenesets").value += document.getElementById("findGeneset").value;}
 				else {document.getElementById("downgenesets").value += '\n' + document.getElementById("findGeneset").value;}
@@ -1242,6 +1255,7 @@
 			
 			function exitAdd() {$('#findGeneset').popover('hide');}
 			
+			// Default phenotype 0 popover, visible at first visit of page. No examples offered before choosing a collection
 			$(document).ready(function(){
 			    $("#upgenesets").popover({
 			        title: '<span class="glyphicon glyphicon-info-sign"></span>',
@@ -1252,7 +1266,8 @@
 			    }); 
 			    $("#upgenesets").on("show.bs.popover", function(){ $(this).data("bs.popover").tip().css("max-width", "700px"); });
 			});
-				
+			
+			// Default phenotype 1 popover, visible at first visit of page. No examples offered before choosing a collection
 			$(document).ready(function(){
 			    $("#downgenesets").popover({
 			        title: '<span class="glyphicon glyphicon-info-sign"></span>',
@@ -1265,6 +1280,7 @@
 			    $("#downgenesets").on("show.bs.popover", function(){ $(this).data("bs.popover").tip().css("max-width", "700px"); });
 			});
 				
+			// Bottom search bar popover with options to add searched gene set to either phenotype
 			$(document).ready(function(){
 			    $("#findGeneset").popover({
 // 			        title : "<b>Hint</b>",
@@ -1300,6 +1316,7 @@
 				    }); 
 				});
 	
+			// How to Explore popover
 			$(document).ready(function(){
 			    $("#form2").popover({
 				        title: '<b>How to <i>Explore</i></b>',
@@ -1312,6 +1329,7 @@
 			    $("#form2").on("show.bs.popover", function(){ $(this).data("bs.popover").tip().css("max-width", "600px"); });
 			});
 			
+			// How to Analyze popover
 			$(document).ready(function(){
 			    $("#form1").popover({
 				        title: '<b>How to <i>Analyze</i></b>',
@@ -1324,7 +1342,7 @@
 			   $("#form1").on("show.bs.popover", function(){ $(this).data("bs.popover").tip().css("max-width", "600px"); });
 			});
 			
-			//Collection related events: sync dropdown and bottom textarea, autocomplete, format examples
+			// Handles collection related events: sync dropdown and bottom textarea, autocomplete, format examples
 			$(document).ready(function(){
 				var selected = $("#selectGeneSetCollection");
 				selected.change(function(e) {
@@ -1346,6 +1364,7 @@
 				
 			});
 			
+			// Adjust phenotype 0,1 popovers according to current collection chosen
 			function showCorrectExamplePopover() {
 				$('#upgenesets').popover('hide');
 				$('#downgenesets').popover('hide');
@@ -1411,6 +1430,7 @@
 				}
 			}
 			
+			// Fill in phenotype 0 with appropriate gene set examples
 			function useUpExamples() {
 				$('#upgenesets').popover('hide');
 				if (localStorage.getItem("currentCollection") == "pathprint") {
@@ -1428,6 +1448,7 @@
 
 			}
 			
+			// Fill in phenotype 1 with appropriate gene set examples
 			function useDownExamples() {
 				$('#downgenesets').popover('hide');
 				if (localStorage.getItem("currentCollection") == "pathprint") {
@@ -1445,15 +1466,7 @@
 
 			}
 			
-// Syncing the 2 dropdowns			
-// 			$(document).ready(function(){
-// 				var bothselects = $("#selectGeneSetCollection, #extraSelectCollection");
-// 				bothselects.change(function(e) {
-// 				    bothselects.val(this.value); // "this" is the changed one
-// 				    originDBname = this.value;
-// 				});
-// 			});
-			
+			// Choose correct gene set collection for bottom search space autocomplete
 			function availableCollection() {
 				if (document.getElementById("selectGeneSetCollection").value == "pathprint") {return pathprintGeneSets;}
 				else if (document.getElementById("selectGeneSetCollection").value == "MSigDBH") {return mSigDBHGeneSets;}
@@ -1462,6 +1475,7 @@
 				else if (document.getElementById("-").value == "MSigDBC5") {return availableGenesets;}
 			}
 			
+			// Run "Run Example Analysis"
 			function runExample() {
 				var example_Collection = $("#selectGeneSetCollection");
 				example_Collection.val("MSigDBC2CP");
@@ -1471,6 +1485,7 @@
 				send();
 			}
 			
+			// Popover for "Run Example Analysis"
 			$(document).ready(function(){
 			    $("#divExample").popover({
 				        title: '<b>Analysis Information</b>',
@@ -1483,7 +1498,7 @@
 			    $("#divExample").on("show.bs.popover", function(){ $(this).data("bs.popover").tip().css("max-width", "600px"); });
 			});
 			
-			//returns 'ok' if all gene sets belong to the same collection (and adjusts the collection if needed), otherwise it returns the collection of each gene set used
+			// Handles analyze inputs and alerts
 			function adjustCollection() {
 				var pathprintGeneSetsUpperCase = pathprintGeneSets.map(function(x){ return x.toUpperCase() })
 				var col = document.getElementById("selectGeneSetCollection").value;
@@ -1510,27 +1525,88 @@
 				}
 				var totalLines = upLines.concat(downLines);
 				var totalCols = upCols.concat(downCols);
-
-// 				var inputCol = '';
 				var flag = false;
-			    for(var i = 1; i < totalCols.length; i++){if((totalCols[i] !== totalCols[0]) || (totalCols[i] == 'None\t\t\t\t\t') || (totalCols[0] == 'NNone\t\t\t\t\t')){flag = true;}}
-				if (flag){
-					var tmp = 'INCORRECT GENE SET INPUT/s\n\nPhenotype 0\n-----------------\n';
-					for (var i = 0;i < upLines.length;i++) {
-						tmp += upCols[i] + '->  ' + upLines[i] + '\n';
+			    for(var i = 1; i < totalCols.length; i++){if((totalCols[i] !== totalCols[0]) || (totalCols[i] == 'None\t\t') || (totalCols[0] == 'None\t\t')){flag = true;}}
+				var c2_count = countInArray(totalCols, 'MSigDBC2CP\t');
+				var c5_count = countInArray(totalCols, 'MSigDBC5\t');
+				var path_count = countInArray(totalCols, 'pathprint\t\t');
+				var h_count = countInArray(totalCols, 'MSigDBH\t\t');
+			    // Incorrect input cases
+			    if (flag){
+			    	
+					if ((c2_count > c5_count)&&(c2_count > path_count)&&(c2_count > h_count)) {
+						var tmp = 'Incorrect gene set input, the following do not belong to majority collection: MSigDBC2CP\n\nPhenotype 0\n-----------------\n';
+						for (var i = 0;i < upLines.length;i++) {
+							if(upCols[i] !== 'MSigDBC2CP\t'){tmp += upCols[i] + '->  ' + upLines[i] + '\n';}
+						}
+						tmp += '\nPhenotype 1\n-----------------\n';
+						for (var i = 0;i < downLines.length;i++) {
+							if(downCols[i] !== 'MSigDBC2CP\t'){tmp += downCols[i] + '->  ' + downLines[i] + '\n';}
+						}
+						return tmp;
 					}
-					tmp += '\nPhenotype 1\n-----------------\n';
-					for (var i = 0;i < downLines.length;i++) {
-						tmp += downCols[i] + '->  ' + downLines[i] + '\n';
+					else if ((c5_count > c2_count)&&(c5_count > path_count)&&(c5_count > h_count)) {
+						var tmp = 'Incorrect gene set input, the following do not belong to majority collection: MSigDBC5\n\nPhenotype 0\n-----------------\n';
+						for (var i = 0;i < upLines.length;i++) {
+							if(upCols[i] !== 'MSigDBC5\t'){tmp += upCols[i] + '->  ' + upLines[i] + '\n';}
+						}
+						tmp += '\nPhenotype 1\n-----------------\n';
+						for (var i = 0;i < downLines.length;i++) {
+							if(downCols[i] !== 'MSigDBC5\t'){tmp += downCols[i] + '->  ' + downLines[i] + '\n';}
+						}
+						return tmp;
 					}
-					return tmp;
-				}else{
+					else if ((path_count > c5_count)&&(path_count > c2_count)&&(path_count > h_count)) {
+						var tmp = 'Incorrect gene set input, the following do not belong to majority collection: pathprint\n\nPhenotype 0\n-----------------\n';
+						for (var i = 0;i < upLines.length;i++) {
+							if(upCols[i] !== 'pathprint\t\t'){tmp += upCols[i] + '->  ' + upLines[i] + '\n';}
+						}
+						tmp += '\nPhenotype 1\n-----------------\n';
+						for (var i = 0;i < downLines.length;i++) {
+							if(downCols[i] !== 'pathprint\t\t'){tmp += downCols[i] + '->  ' + downLines[i] + '\n';}
+						}
+						return tmp;
+					}
+					else if ((h_count > c5_count)&&(h_count > c2_count)&&(h_count > path_count)) {
+						var tmp = 'Incorrect gene set input, the following do not belong to majority collection: MSigDBH\n\nPhenotype 0\n-----------------\n';
+						for (var i = 0;i < upLines.length;i++) {
+							if(upCols[i] !== 'MSigDBH\t\t'){tmp += upCols[i] + '->  ' + upLines[i] + '\n';}
+						}
+						tmp += '\nPhenotype 1\n-----------------\n';
+						for (var i = 0;i < downLines.length;i++) {
+							if(downCols[i] !== 'MSigDBH\t\t'){tmp += downCols[i] + '->  ' + downLines[i] + '\n';}
+						}
+						return tmp;
+					}
+					else {
+						var tmp = 'Incorrect gene set input, please choose one colection\n\nPhenotype 0\n-----------------\n';
+						for (var i = 0;i < upLines.length;i++) {
+							tmp += upCols[i] + '->  ' + upLines[i] + '\n';
+						}
+						tmp += '\nPhenotype 1\n-----------------\n';
+						for (var i = 0;i < downLines.length;i++) {
+							tmp += downCols[i] + '->  ' + downLines[i] + '\n';
+						}
+						return tmp;
+					}
+				}
+				// Correct input case
+			    else{
 					if(col !== totalCols[0]) {localStorage.setItem("selectGeneSetCollection",totalCols[0]);}	
 					return 'ok';
 				}
-			}		
+			}	
 			
-			
+			// Counts occurences in array
+			function countInArray(array, what) {
+			    var count = 0;
+			    for (var i = 0; i < array.length; i++) {
+			        if (array[i] === what) {
+			            count++;
+			        }
+			    }
+			    return count;
+			}
 			
 		</script>
 </head>
