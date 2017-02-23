@@ -71,6 +71,7 @@
 			// Handler for Explore/Analyze decision
 			$(document).ready(function(){
 								
+				$("#navMenu").hide();
 // 				document.getElementById("extraSelectCollection").value = localStorage.getItem("currentCollection");
 				// Access current domain's local Storage object. 
 				var tmp = localStorage.getItem("explore");
@@ -648,6 +649,7 @@
 				$("#table1").show();
 				var t = $('#table1').DataTable({
 					destroy: true,
+					"bAutoWidth": true,
 					"columnDefs": [
 						{ className: "dt-body-left dt-head-left", "targets": [ 0 ] },
 						{ className: "dt-body-left dt-head-left", "targets": [ 1 ] },
@@ -773,15 +775,42 @@
 						  cy.edges().css({"opacity":"1"});
 					});
 					
- 					// Potential feature: Information URL on taphold
-// 				    cy.on('taphold', 'node', function(event) {
-// 				      	var target = event.cyTarget;
-// 				      	var full_name = target.data("id");
-// 				      	var bio_query = full_name.replace(/_/g," ");
-// 				      	cy.nodes().unselect();
-// 				      	window.open('https://www.ncbi.nlm.nih.gov/biosystems/?term=IL2RB' + bio_query);
-// 				      	target.unselect();
-// 				    });
+ 					// Potential feature:  on taphold
+				    cy.on('taphold', 'node', function(event) {
+				      	var target = event.cyTarget;
+				      	var full_name = target.data("id");
+				      	var connected_nodes = [];
+				      	var connected_edges = [];
+				      	var edges = cy.edges();
+					    for (var i = 0; i < edges.length; i++) {
+					    	if(edges[i].data("target") == full_name){
+					    		connected_nodes.push(edges[i].data("source"));
+					    		connected_edges.push(edges[i].data("id")); 
+					    	}
+					    	if(edges[i].data("source") == full_name){
+					    		connected_nodes.push(edges[i].data("target")); 
+					    		connected_edges.push(edges[i].data("id")); 
+					    	}
+					    }
+					    cy.nodes().css({"opacity":"0.2","z-index":"999998"});
+					    cy.edges().css({"opacity":"0.1","z-index":"999997"});
+					    cy.getElementById(full_name).css({'opacity': '1'});
+					    for (var i = 0; i < connected_nodes.length; i++) {
+					    	cy.getElementById(connected_nodes[i]).css({'opacity': '1'});
+					    }
+					    for (var i = 0; i < connected_edges.length; i++) {
+					    	cy.getElementById(connected_edges[i]).css({'opacity': '1'});
+					    }   
+				      	target.unselect();
+				    });
+					
+					// mouseup on taphold
+					cy.on('mouseup','node', function(event){
+						  var target = event.cyTarget;
+						  target.css({"z-index":"999999"});
+						  cy.nodes().css({"opacity":"1"});
+						  cy.edges().css({"opacity":"1"});
+					});
 		
 					// Bring up the gene set's genes and url
 				    cy.on('tap', 'node', function(event) {
@@ -953,8 +982,9 @@
 				localStorage.setItem("inputpValue2", $("#inputpValue2").val());
                 localStorage.setItem("form2genesetCollection", $('input:radio[name=form2geneset]:checked').val()); 
                 localStorage.setItem("currentCollection", $("#currentCollection").val());
+                
             }
-
+            
 			function send(){
                 saveSettings();				
                 var upVal = $("#upgenesets").val();
@@ -964,7 +994,10 @@
 				var newCorrCutOffValue = $("#inputCorrelation").val();
 				var newGeneSetCollectionValue = $("#selectGeneSetCollection").val();
 				var newGeneSetsValue;
-                				
+                $("#coefficientSlider").val()
+                // Adjusting the slider
+                document.getElementById("coefficientSlider").value = $("#inputCorrelation").val();
+                document.getElementById("pvalueSlider").value = $("#inputpValue").val();
                 // JSP API gets confused with leading and traling blank lines.
                 // So eliminate those, and at the same time convert to upper case.
                 upGenesetNames = upVal.trim().toUpperCase().split("\n")
@@ -1005,7 +1038,6 @@
 			function sendForm2(){
                 saveSettings();               	
 				var form2genesetCollection = $('input:radio[name=form2geneset]:checked').val();
-
 				if(form2genesetCollection =="radioPathprint") {
 					form2geneset= $('#selectPathprint').val();
 				} else if (form2genesetCollection == "radioMSigDBC2CP") {
@@ -1043,7 +1075,11 @@
 				var newPCutOffValue = $("#inputpValue2").val();
 				var newCorrCutOffValue = $("#inputCorrelation2").val();
 				var newGeneSetsValue;
-                				                
+				
+				// Adjusting the sliders
+                document.getElementById("coefficientSlider").value = $("#inputCorrelation2").val();
+                document.getElementById("pvalueSlider").value = $("#inputpValue2").val();
+                
 				if(newTopNValue==0) {
 					alert("Please specify the number of related gene sets to be found!");
 					return;
@@ -1086,6 +1122,7 @@
 				}
 				var t = $(tableSelector).DataTable({
 					destroy: true,
+					"bAutoWidth": true,
 					"columnDefs": [
 						{ className: "dt-body-left dt-head-left", "targets": [ 0 ] },
 						{ className: "dt-body-left dt-head-left", "targets": [ 1 ] },
@@ -1364,7 +1401,7 @@
 // 			   $("#form1").on("show.bs.popover", function(){ $(this).data("bs.popover").tip().css("max-width", "600px"); });
 // 			});
 			
-			// How to Analyze popover
+			// Clustering methods info
 			$(document).ready(function(){
 			    $("#clusterInfo").popover({
 				        title: '<b>Hierarchical clustering methods</b>',
@@ -1376,6 +1413,19 @@
 				    });
 			   $("#clusterInfo").on("show.bs.popover", function(){ $(this).data("bs.popover").tip().css("max-width", "600px"); });
 			});		
+			
+			// Overlap Coefficient info
+			$(document).ready(function(){
+			    $("#CoInfo").popover({
+				        title: '<b>Overlap Coefficient</b>',
+				        placement: "top",
+				        trigger: "hover",
+				        content : "The number of common genes divided by the number of genes in the smaller gene set" ,
+				        html: true,
+				        container: "body"
+				    });
+			   $("#CoInfo").on("show.bs.popover", function(){ $(this).data("bs.popover").tip().css("max-width", "350px"); });
+			});	
 			
 			// Handles collection related events: sync dropdown and bottom textarea, autocomplete, format examples
 			$(document).ready(function(){
@@ -1520,6 +1570,7 @@
 				document.getElementById("upgenesets").value = 'KEGG_NOTCH_SIGNALING_PATHWAY\nPID_ANGIOPOIETIN_RECEPTOR_PATHWAY\nPID_RB_1PATHWAY\nPID_PS1_PATHWAY';
 				document.getElementById("downgenesets").value = 'REACTOME_A_TETRASACCHARIDE_LINKER_SEQUENCE_IS_REQUIRED_FOR_GAG_SYNTHESIS\nREACTOME_YAP1_AND_WWTR1_TAZ_STIMULATED_GENE_EXPRESSION\nKEGG_DORSO_VENTRAL_AXIS_FORMATION\nKEGG_FOCAL_ADHESION';
 				document.getElementById("inputTopN").value = 5;
+				document.getElementById("resultCollection").value = "MSigDBC2CP";
 				
 // 				document.getElementById("inputpValue").value = 0.5;
 // 				document.getElementById("inputCorrelation").value = -0.5;
@@ -1659,13 +1710,19 @@
 				}
 			}
 	
+			// Scrolls window
+			function scrollWin(x) {
+				document.getElementById(x).scrollIntoView({ 
+					  behavior: 'smooth' 
+				});
+			}
 		</script>
 </head>
 <body>
 	<div class="container-fluid">
 		<div class="row" id="divHeader">
 			<div class="col-sm-12">
-				<div class="col-sm-12" style="margin-top: 21.4333px;margin-bottom: 21.4333px;">
+				<div class="col-sm-12" style="margin-top: 21.4333px;margin-bottom: 11.4333px;">
 					<h1><span style="font-size: 1em;"><a href="index.html"><img src="journal125.png" width="10%" height="10%" style="padding-right: 9px; vertical-align: bottom"></a>PCxN&nbsp</span><span style="font-size: 0.8em;">The Pathway Co-Activity Map</span></h1>
 				</div>
 				<div class="col-sm-6" id="menu" style="text-align: right;">
@@ -1861,13 +1918,13 @@
 					
 				</div>
 			</div>
-			<div class="row result">
+			<div class="row result" id="upperLevel">
 				<div class="col-sm-12">
 					<div class="col-sm-6 result box" id="divHeatmap">
 						<!-- The "box" class here is used to find the right DIV when resizing.
                          	See sizeCanvas() -->
 						<label style="display: block; text-align: center; font-size: 20px;padding-bottom: 10px;">Correlation Heatmap</label>
-						<button	class="button-tiny button button-rounded button-raised button-small-caps" type="button" id="buttonpng1" onclick="saveHeatmapAsPNG();" style="padding-right: 11px; padding-left: 11px;position: absolute; z-index: 99999999;font-size:14px;" />PNG</button>
+						<button	class="button-tiny button button-rounded button-raised button-small-caps" type="button" id="buttonpng1" onclick="saveHeatmapAsPNG();" style="padding-right: 11px; padding-left: 11px;position: absolute; font-size:14px;" />PNG</button>
 						<!-- This div gets replaced by sizeCanvas() -->
 						<div>
 							<canvas id="canvas1"></canvas>
@@ -1937,7 +1994,7 @@
 
 					<tfoot>
 						<tr>
-							<th>GeneID</th>
+							<th>NCBI GeneID</th>
 							<th>Symbol</th>
 							<th>Description</th>
 						</tr>
@@ -1951,6 +2008,7 @@
 					<div class="col-sm-12 result">
 						<h3 class="result" style="font-weight: bold; margin-bottom: 15px">Network Data Table</h3>
 						<div class="col-sm-12 result">
+						
 							<table id="table1" class="display result" cellspacing="0" width="100%">
 								<thead class="result">
 									<tr class="result">
@@ -1958,10 +2016,11 @@
 										<th class="result">Gene Set B</th>
 										<th class="result">Correlation</th>
 										<th class="result">p Value</th>
-										<th class="result">Overlap Coefficient</th>
+										<th class="result">Overlap Coefficient<i class="fa fa-info-circle" aria-hidden="true" id="CoInfo" style="cursor: pointer;padding-left: 20px;z-index:9999;"></i></th>
+										
 									</tr>
 								</thead>
-
+								
 								<tfoot class="result">
 									<tr class="result">
 										<th class="result">Gene Set A</th>
@@ -1971,11 +2030,19 @@
 										<th class="result">Overlap Coefficient</th>
 									</tr>
 								</tfoot>
+								
 							</table>
+							
 						</div>
 					</div>
 				</div>
 			</div>
+			
+		</div>
+		<div id="navMenu" class="navigation_arrows">
+		  	  <button onClick ="scrollWin('upperLevel')" class="button button-block button-small button-rounded button-border" style="padding-left:10px;padding-right:10px;background:white;"><i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i> Heatmap/Network</button>
+	  		  <button onClick ="scrollWin('divGeneList')" class="button button-block button-small button-rounded button-border" style="padding-left:25px;padding-right:25px;background:white;"><i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i> Gene set list</button>
+	  		  <button onClick ="scrollWin('divTable1')" class="button button-block button-small button-rounded button-border"style="padding-left:7px;padding-right:7px;background:white;"><i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i> Network data Table</button>
 		</div>
 	</div>
 	<br>
@@ -2095,6 +2162,7 @@
 			$("#divInput").hide();
 			$("#divShareButtons").hide();
 			$(".result").show();
+			$("#navMenu").show();
 				
 			if (document.getElementById("checkboxHeatmap").checked) {
 				$("#divHeatmap").parents().show();
