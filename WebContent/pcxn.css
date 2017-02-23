@@ -275,3 +275,42 @@ input[type="range"]::-ms-tooltip {
 .autocomplete-suggestions strong { font-weight: normal; color: #3399FF; }
 .autocomplete-group { padding: 2px 5px; }
 .autocomplete-group strong { display: block; border-bottom: 1px solid #000; }
+
+table.dataTable thead th {
+    position: relative;
+    background-image: none !important;
+    bAutoWidth:false;
+}
+ 
+table.dataTable thead th.sorting:after,
+table.dataTable thead th.sorting_asc:after,
+table.dataTable thead th.sorting_desc:after {
+/*     position: absolute; */
+/*     top: 12px; */
+/*     right: 8px; */
+/*     display: block; */
+    font-family: FontAwesome;
+}
+
+table.dataTable thead th.sorting:after {
+    content: "\f0dc";
+    color: #ddd;
+    font-size: 0.8em;
+    padding-top: 0.12em;
+}
+table.dataTable thead th.sorting_asc:after {
+    content: "\f0de";
+}
+table.dataTable thead th.sorting_desc:after {
+    content: "\f0dd";
+}
+
+.navigation_arrows {
+	position: fixed;
+    bottom: 4px;
+    left: 4px;
+    border: 1px solid grey;
+	border-radius: 5px;
+	padding: 2px;
+	background: lightgray;
+}
