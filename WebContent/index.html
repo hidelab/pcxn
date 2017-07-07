@@ -8,7 +8,8 @@
 <meta property="og:title"		content="PCxN The Pathway Co-Activity Map" />
 <meta property="og:description"	content="A database for correlation of pathways/gene sets" />
 <meta property="og:image"		content="http://pcxn.org:8080/pcxnscreenshot1.png" />
-<meta name="viewport"			content="user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, minimal-ui">
+<!-- <meta name="viewport"			content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, minimal-ui"> -->
+<meta name="viewport"			content="width=device-width, user-scalable=no, initial-scale=1.0, minimal-ui">
 
 <!-- Load all .js and .css required -->
 <script src="js/canvasXpress.min.js"></script>
@@ -61,7 +62,7 @@
 			var heatmapColors = [];
 			var cy = null;
 			var cxHeatmap = null;
-			var explore = false;
+			var explore = true;
 			var activeLayout = 'circle';
 			var edgeWidth = 5;
 // 			var originDBname = "MSigDBC2CP";
@@ -73,8 +74,11 @@
 								
 				$("#navMenu").hide();
 // 				document.getElementById("extraSelectCollection").value = localStorage.getItem("currentCollection");
+				// Forcing to astrt with Explore
+				localStorage.setItem("explore", true);
 				// Access current domain's local Storage object. 
 				var tmp = localStorage.getItem("explore");
+				
     			if (tmp===null) {
                     tmp=="true"
                 }
@@ -96,12 +100,13 @@
 			// Read what is submitted in the localStorage(user choices), depending on Explore/Analyze
 			function checkLocalStorage() {
                 //localStorage.clear();
+                //alert(explore);
 			    var tmp = localStorage.getItem("explore");
     			if (tmp===null) {
                     tmp=="true"
                 }
                 explore = (tmp=="true");
-                //alert(explore);
+                
                 if (!explore) {
                     document.getElementById("radioAnalysis2").checked = true;
                     tmp = localStorage.getItem("upgenesets");
@@ -167,7 +172,7 @@
                     if (form2genesetCollection !== null & form2geneset !== null) {
                         if (form2genesetCollection == "radioMSigDBH") {
                             document.getElementById("radioMSigDBH").checked = true;
-                            $("#selectMSigDBH").val(form2geneset); 
+                            $("#selectMSigDBH").val(form2geneset);                             
                         } else if (form2genesetCollection == "radioMSigDBC2CP") {
                             document.getElementById("radioMSigDBC2CP").checked = true;
                             $("#selectMSigDBC2CP").val(form2geneset); 
@@ -231,6 +236,7 @@
                 var newCanvas = $newCanvas[0]
                 newCanvas.style.width = '85vh'
                 newCanvas.style.height = '100%'
+//                 newCanvas.style.position = 'absolute'
 //                 newCanvas.style.border = '3px solid rgb(231, 231, 231)'
 //                 newCanvas.style.borderRadius = '5px'
 //                 newCanvas.style.cssFloat = 'left'
@@ -238,6 +244,8 @@
 //                 console.log("fit", id, newCanvas.width)
 //                 newCanvas.width = document.getElementById("cy").width;
                 newCanvas.height = newCanvas.width - 10;
+//                 newCanvas.width = document.getElementById("divNetwork").innerWidth;
+//                 newCanvas.height = document.getElementById("divNetwork").innerHeight;
 
 				if(document.getElementById("checkboxNetwork").checked & 
 				(!document.getElementById("checkboxHeatmap").checked) &
@@ -534,8 +542,9 @@
 							"graphType": "Heatmap",
 							"linkage" : clusterMethod,
 							"varLabelRotate": 0,
-							"marginB" : 15,
-							"marginBottom" : 20,
+							"margin" : 5,
+// 							"marginBottom" : 20,
+// 							"isOncoprint" : true,
 							"maxSmpStringLen" : 15,
 							"maxVarStringLen": 15,
 							"autoScaleFont" : true,
@@ -545,12 +554,12 @@
 							"decorationFontSize": 14,
 							"disableMenu" : true,
 							"disableToolbar" : true,
-							"resizable" : false,
+							"resizable" : true,
 							"indicatorCenter" : "white",
 							"colorSpectrum": myColors,
 							"colorSpectrumZeroValue": 0,
 							"legendInside": true,
-							"legendPosition": "bottom"
+							"legendPosition": "top"
 					},
 					{
 						'click' : function(o, e, t) {
@@ -736,7 +745,7 @@
 
 					    var link = edges[i]
 					    cy.add([
-					        {group: "edges", data: {id: link.id1 + ' - ' + link.id2, source: link.id1, target: link.id2, color: link.color }}
+					        {group: "edges", data: {id: link.id1 + ' - ' + link.id2, source: link.id1, target: link.id2, color: link.color, correlation: link.value }}
 					    ])
 					};
 										
@@ -990,6 +999,9 @@
             }
             
 			function send(){
+				// Check all modules (prevent missing modu)
+				document.getElementById("checkboxHeatmap").checked = true;
+				document.getElementById("checkboxNetwork").checked = true;
                 saveSettings();				
                 var upVal = $("#upgenesets").val();
 				var downVal = $("#downgenesets").val();
@@ -1040,6 +1052,9 @@
 			};
 			
 			function sendForm2(){
+				// Check all modules (prevent missing module)
+				document.getElementById("checkboxHeatmap").checked = true;
+				document.getElementById("checkboxNetwork").checked = true;
                 saveSettings();               	
 				var form2genesetCollection = $('input:radio[name=form2geneset]:checked').val();
 				if(form2genesetCollection =="radioPathprint") {
@@ -1117,6 +1132,7 @@
 			
 			function handleTable2Response(response) {
 				var tableData = response;
+// 				alert(tableData)
 				var tableSelector = '#table2';				
 				for(var k = 0; k < tableData.length; ++k){
 					var entrezid = tableData[k][0];
@@ -1719,17 +1735,15 @@
 				document.getElementById(x).scrollIntoView({ 
 					  behavior: 'smooth' 
 				});
-			}
+			
+		}
 		</script>
 </head>
 <body>
 	<div class="container-fluid">
 		<div class="row" id="divHeader">
 			<div class="col-sm-12">
-				<div class="col-sm-12" style="margin-top: 21.4333px;margin-bottom: 11.4333px;">
-					<h1><span style="font-size: 1em;"><a href="index.html"><img src="journal125.png" width="10%" height="10%" style="padding-right: 9px; vertical-align: bottom"></a>PCxN&nbsp</span><span style="font-size: 0.8em;">The Pathway Co-Activity Map</span></h1>
-				</div>
-				<div class="col-sm-6" id="menu" style="text-align: right;">
+				<div class="col-sm-24 row" id="menu" style="float: right;position:static;margin: 5px;"">
 					<ul>
 						<li class="first"><a href="index.html" accesskey="1" title="">Home</a></li>
 						<li><a href="news.html" accesskey="2" title="">News</a></li>
@@ -1739,41 +1753,45 @@
 						<li><a href="contacts.html" accesskey="6" title="">Contacts</a></li>			
 					</ul>
 				</div>
+				<div class="col-sm-24 row" style="margin-bottom: 11.4333px;float: inherit;width: 100%;">
+					<h1><span style="font-size: 1em;"><a href="index.html"><img src="journal125.png" width="10%" height="10%" style="padding-right: 9px; vertical-align: bottom"></a>PCxN&nbsp</span><span style="font-size: 0.8em;">The Pathway Co-Activity Map</span></h1>
+				</div>
+
 			</div>
 		</div>
 		<div class="row" id="divInput">
-			<div class="col-sm-5 col-md-offset-1">
-				<form id="form2" name="form2" class="well">
-					<label for="inputTopN2" id="findLabel2" style="margin-bottom: 26px;margin-top: 30px;"><font color="#e67300">Step 1:</font> Find top</label> <input type="text" id="inputTopN2" value="10" style="border-radius:2px;"/>
+			<div class="col-sm-6">
+				<form id="form2" name="form2" class="well"  style="width:80%;font-size:1m;min-width:513px">
+					<label for="inputTopN2" id="findLabel2" style="margin-bottom: 26px;margin-top: 30px"><font color="#e67300">Step 1:</font> Find top</label> <input type="text" id="inputTopN2" value="10" style="border-radius:2px;width:15%"/>
 					<label> gene sets</label><br>
 					<label><font color="#e67300">Step 2:</font> Correlated with</label><br>
-					<input type="radio" id="radioMSigDBH" name="form2geneset" value="radioMSigDBH" style="border-radius:2px;" checked>Select a gene set from MSigDB H (Hallmark gene sets) <br><select id="selectMSigDBH" size="1" style="margin-bottom:5px;"></select><br>
-					<input type="radio" id="radioMSigDBC2CP" name="form2geneset" value="radioMSigDBC2CP" style="border-radius:2px;" checked>Select a gene set from MSigDB C2 CP (Canonical pathways) <br><select id="selectMSigDBC2CP" size="1" style="margin-bottom:5px;"></select><br>
-					<input type="radio" id="radioMSigDBC5" name="form2geneset" value="radioMSigDBC5" style="border-radius:2px;">Select a gene set from MSigDB C5 GO BP gene sets <br><select id="selectMSigDBC5" size="1" style="margin-bottom:5px;"></select><br>
-					<input type="radio" id="radioPathprint" name="form2geneset" value="radioPathprint" style="border-radius:2px;">Select a gene set from Pathprint <br> <select id="selectPathprint" size="1" style="margin-bottom:5px;"></select><br> 
-					<input type="radio" id="radioSearchGeneSet" name="form2geneset" value="radioSearchGeneSet">Search a gene set <input id="textfieldGeneSet" style="border-radius:2px;margin-bottom: 20px;"><br>
+					<input type="radio" id="radioMSigDBH" name="form2geneset" value="radioMSigDBH" style="border-radius:2px;" checked>Select a gene set from MSigDB H (Hallmark gene sets) <br><select id="selectMSigDBH" size="1" style="margin-bottom:5px;width:100%"></select><br>
+					<input type="radio" id="radioMSigDBC2CP" name="form2geneset" value="radioMSigDBC2CP" style="border-radius:2px;" checked>Select a gene set from MSigDB C2 CP (Canonical pathways) <br><select id="selectMSigDBC2CP" size="1" style="margin-bottom:5px;width:100%"></select><br>
+					<input type="radio" id="radioMSigDBC5" name="form2geneset" value="radioMSigDBC5" style="border-radius:2px;">Select a gene set from MSigDB C5 GO BP gene sets <br><select id="selectMSigDBC5" size="1" style="margin-bottom:5px;width:100%"></select><br>
+					<input type="radio" id="radioPathprint" name="form2geneset" value="radioPathprint" style="border-radius:2px;">Select a gene set from Pathprint <br> <select id="selectPathprint" size="1" style="margin-bottom:5px;width:100%"></select><br> 
+					<input type="radio" id="radioSearchGeneSet" name="form2geneset" value="radioSearchGeneSet">Search a gene set <input id="textfieldGeneSet" style="border-radius:2px;margin-bottom: 20px;width:100%"><br>
 <!-- 					<input type="radio" id="radioSearchGeneSet" name="form2geneset" value="radioSearchGeneSet">Search a gene set <input id="textfieldGeneSet" onkeypress="hideOptionsAndResults()"  style="border-radius:2px;margin-bottom: 20px;"><br> -->
 					<label id="ste3label"><font color="#e67300">Step 3:</font> </label><br>
-					<label id="label1" for="inputCorrelation2" style="margin-bottom: 12px;">Absolute correlation coefficient greater than </label><input type="text" id="inputCorrelation2" value="0.05" style="border-radius:2px;margin-left:2px;"/><br>
-					<label id="label2" for="inputpValue2" style="margin-bottom: 13px;">and p-value less than</label><input type="text" id="inputpValue2" value="0.05" style="border-radius:2px;margin-left:2px;"/><input type="button" class="button-tiny button-rounded button-raised button-action" id="button3" value=" GO "	onclick="javascript:sendForm2();" style="float:right;margin-right:9px;height:25px;padding-left:5px;padding-right:5px;margin-top:45px;" /> <input  class="button-tiny button-rounded button-raised button-caution"type="reset" id="button4" value=" Reset " style="float:right;height:25px;padding-left:5px;padding-right:5px;margin-top:45px;" /> 
+					<label id="label1" for="inputCorrelation2" style="margin-bottom: 12px;">Absolute correlation coefficient greater than </label><input type="text" id="inputCorrelation2" value="0.05" style="border-radius:2px;margin-left:2px;width:15%"/><br>
+					<label id="label2" for="inputpValue2" style="margin-bottom: 13px;">and p-value less than</label><input type="text" id="inputpValue2" value="0.05" style="border-radius:2px;margin-left:2px;width:15%"/><input type="button" class="button-tiny button-rounded button-raised button-action" id="button3" value=" GO "	onclick="javascript:sendForm2();" style="float:right;margin-right:9px;height:25px;padding-left:5px;padding-right:5px;margin-top:45px;" /> <input  class="button-tiny button-rounded button-raised button-caution"type="reset" id="button4" value=" Reset " style="float:right;height:25px;padding-left:5px;padding-right:5px;margin-top:45px;" /> 
 				</form>
-				<form id="form1" name="form1" class="well"> 
+				<form id="form1" name="form1" class="well"  style="width:80%;font-size:1m;min-width:513px"> 
 					<label for="selectGeneSetCollection" style="margin-bottom: 13px;"><font color="#e67300">Step 1:</font>   Select gene set collection: </label>
-					<select id="selectGeneSetCollection" size="1" style="height: 25px;border-radius:2px;">
+					<select id="selectGeneSetCollection" size="1" style="height: 25px;border-radius:2px;width:49.5%">
 						<option value="-" >-</option>
 						<option value="MSigDBC2CP">MSigDB C2 CP (Canonical pathways)</option>
 						<option value="pathprint">Pathprint</option>
 						<option value="MSigDBH">MSigDB H (Hallmark gene sets)</option>
 						<option value="MSigDBC5">MSigDB C5 GO BP gene sets</option>
-					</select>
+					</select><br>
 					<label for="upgenesets" style="display: inline;"><font color="#e67300">Step 2:</font> Find correlation among gene sets up-regulated in phenotype 0 </label><br>
-					<textarea rows="7" cols="50" id="upgenesets" data-toggle="popover" style="border-radius:2px;"></textarea><i class="fa fa-info-circle" aria-hidden="true" id="textArea1Info" style="padding-left: 5px;cursor: pointer;display: inline;float:right;position:absolute;padding-top:5px;"></i><br> 
+					<textarea rows="7" cols="50" id="upgenesets" data-toggle="popover" style="width:98%;border-radius:2px;"></textarea><i class="fa fa-info-circle" aria-hidden="true" id="textArea1Info" style="padding-left: 5px;cursor: pointer;display: inline;float:right;position:absolute;padding-top:5px;"></i><br> 
 					<label for="downgenesets" style="">and gene sets	up-regulated in phenotype 1 (optional) </label><br>
-					<textarea rows="7" cols="50" id="downgenesets" data-toggle="popover" style="margin-bottom: 5px;border-radius:2px;"></textarea><i class="fa fa-info-circle" fa-2x aria-hidden="true" id="textArea2Info" style="padding-left: 5px;cursor: pointer;display: inline;float:right;position:absolute;padding-top:5px;"></i><br>
+					<textarea rows="7" cols="50" id="downgenesets" data-toggle="popover" style="width:98%;margin-bottom: 5px;border-radius:2px;"></textarea><i class="fa fa-info-circle" fa-2x aria-hidden="true" id="textArea2Info" style="padding-left: 5px;cursor: pointer;display: inline;float:right;position:absolute;padding-top:5px;"></i><br>
 					<label for="inputTopN" style="margin-bottom: 13px;"><font color="#e67300">Step 3:</font> Top</label> <input type="text" id="inputTopN" value="0" style="border-radius:2px;" />
 					<label>correlated genes sets</label><br>
 					<label for="inputCorrelation" style="margin-bottom: 13px;border-radius:2px;"> with absolute correlation coefficient greater than</label>
-					<input type="text" id="inputCorrelation" value="0.05" style="border-radius:2px;"/><br>
+					<input type="text" id="inputCorrelation" value="0.05" style="width:25%;border-radius:2px;"/><br>
 					<label for="inputpValue" style="margin-bottom: 13px;border-radius:2px;">and p-value less than</label>
 					<input type="text" id="inputpValue" value="0.05" style="border-radius:2px;"/><br>
 
@@ -1787,15 +1805,14 @@
 					<input type="button" class="button-tiny button-rounded button-raised button-action" id="button1" value=" GO " onclick="javascript:send();" style="float:right;margin-right:9px;height:25px;padding-left:5px;padding-right:5px"/><input type="reset" class="button-tiny button-rounded button-raised button-caution" id="button2" value=" Reset " style="float:right;height:25px;padding-left:5px;padding-right:5px; "/> 
 				</form>
 							
-				<form class="form-inline" id="extraOptions" style="width: 550px;float: right;position: relative;">
+				<form class="form-inline" id="extraOptions" style="width: 80%;float: right;position: relative;min-width:513px">
 					<input id="findGeneset" placeholder="&#xF002    Search geneset name and add it to a phenotype" class="well col-sm-7" style ="width:70%;float:right;border-top-left-radius: 0px;border-bottom-left-radius: 0px;font-family: FontAwesome;font-style: normal;font-weight: normal;text-decoration: inherit;"  data-toggle="popover" data-placement="bottom" title =""></input>		
 					<input id="extraSelectCollection" class="well" value="-" style="height:60px;float:left;background: #EEE;border-top-right-radius: 0px;border-bottom-right-radius: 0px;text-align:center;width:30%;"  disabled></input>	
-				</form>
-							
+				</form>				
 			</div>
-			<div class="col-sm-5" style="height:550px">
-				<input class="col-sm-12 well button button-glow" type="button" value="&#xf04b Run Example Analysis" onclick="runExample();" style="font-family: FontAwesome;border-radius:4px;min-height:131px;font-size: x-large;margin-bottom: 13px;" id="divExample"></input>
-				<div class="col-sm-12 well" style="border-radius: 4px;margin-bottom: 12px;" id="divAnalysis1">
+			<div class="col-sm-6" style="height:550px">
+				<input class="col-sm-12 well button button-glow" type="button" value="&#xf04b Run Example Analysis" onclick="runExample();" style="font-family: FontAwesome;border-radius:4px;min-height:131px;height:24%;font-size: x-large;margin-bottom: 13px;width:80%;min-width:513px" id="divExample";></input>
+				<div class="col-sm-12 well" style="border-radius: 4px;margin-bottom: 12px;width:80%;min-width:513px;height:34%;" id="divAnalysis1">
 					<h4>
 						<input type="radio" id="radioAnalysis1" name="radioAnalysis"
 							value="radioAnalysis1" checked><label for="radioAnalysis1"> Explore</label>
@@ -1815,7 +1832,7 @@
 					</p>
 				</div>
 <!-- 				<div class="col-sm-12"><br></div> -->
-				<div class="col-sm-12 well" style="border-radius: 4px;margin-bottom: 12px;" id="divAnalysis2">
+				<div class="col-sm-12 well" style="border-radius: 4px;margin-bottom: 12px;width:80%;min-width:513px;height:34%" id="divAnalysis2">
 					<h4>
 						<input type="radio" id="radioAnalysis2" name="radioAnalysis"
 							value="radioAnalysis2"><label for="radioAnalysis2"> Analyze</label>
@@ -1839,7 +1856,7 @@
 <!-- 				<div class="col-sm-12"><br></div> -->
 			</div>
 		</div>
-		<div class="row" id="divShareButtons" style="position:relative;padding-top:20px;">
+		<div class="row" id="divShareButtons" style="position:fixed;bottom:0px;width:100%;padding-top:20px;">
 			<label>Share PCxN</label> <a class="sbg-button sbg-button-facebook fa-2x"
 				data-sbg-network="facebook" data-sbg-url="http://pcxn.org:8080"
 				data-sbg-title="PCxN The Pathway Co-Activity Map"
@@ -1880,7 +1897,7 @@
 		<div class="row" id="divResult">
 			<div class="row result"
 				style="margin-top: 12px; margin-bottom: 12px;">
-				<div class="col-sm-12 result" style="text-align: center;border: 1px solid black;padding-right: 12px;padding-left: 12px;">
+				<div class="col-sm-12 result" style="text-align: center;border: 1px solid black;padding-right: 12px;padding-left: 12px;min-width:664px;">
 
 					<div class="col-sm-12 result" id="menu2"
 						style=" background: rgba(226,226,226,1);
@@ -1918,14 +1935,14 @@
 			</div>
 			<div class="row result" id="upperLevel">
 				<div class="col-sm-12">
-					<div class="col-sm-6 result box" id="divHeatmap" style="">
+					<div class="col-sm-6 result box" id="divHeatmap" style="overflow-x: auto;overflow-y: hidden;">
 						<!-- The "box" class here is used to find the right DIV when resizing.
                          	See sizeCanvas() -->
 						<label style="display: block; text-align: center; font-size: 20px;padding-bottom: 10px;">Correlation Heatmap</label>
 						<button class="button-tiny button button-rounded button-raised button-small-caps" type="button" id="buttonpng1" onclick="saveHeatmapAsPNG();" style="padding-right: 11px; padding-left: 11px;margin-bottom: 5px;margin-top: 5px;position: absolute; font-size:14px;" />PNG</button>
 						<!-- This div gets replaced by sizeCanvas() -->
 						<div>
-							<canvas id="canvas1"></canvas>
+							<canvas id="canvas1" responsive="true"></canvas>
 						</div>
 					</div>
 					<div class="col-sm-6 result row" id="divNetwork" style="left: 15px; padding-right: 0px; margin-right: 0px;">
@@ -1936,19 +1953,19 @@
 								<div class="button-group" style="position: absolute; z-index: 99999999; width:100%; background-color: #e7e7e7;padding-top: 3.5px; padding-bottom: 2.5px;border-radius:5px; border-bottom-right-radius: 0px;border-bottom-left-radius: 0px;">
 <!-- 									<label style=" padding-left: 24px; float:left; padding-top: 2.5px;color: #575757;" />Tools</label> -->
 									<div id="miscButtonGroup" class="btn-group" style="float:right; margin-right: 5px; font-size:14px;">
-										<button class="button-tiny button button-rounded button-raised button-small-caps" type="button" onclick="centerLayout();" style="padding-right: 11px;padding-left: 14px;"/>Center Graph</button>
-										<button id="edgesButton"  class="button-tiny button button-rounded button-raised button-small-caps" type="button" onclick="edgewidth();" style="padding-right: 11px;padding-left: 14px;"/>Edges</button>
+										<button class="button-tiny button button-rounded button-raised button-small-caps" type="button" onclick="centerLayout();" style="padding-right: 10px;padding-left: 10px;"/>Center Graph</button>
+										<button id="edgesButton"  class="button-tiny button button-rounded button-raised button-small-caps" type="button" onclick="edgewidth();" style="padding-right: 10px;padding-left: 10px;"/>Edges</button>
 									</div>
 									<div id="layoutButtonGroup" class="btn-group" style="float:right; margin-right: 5px;font-size:14px;">
-										<button class="button-tiny button button-rounded button-raised button-small-caps" type="button"  onclick="spreadLayout();" style="padding-right: 11px;padding-left: 11px;"/>Spread</button>
-										<button class="button-tiny button button-rounded button-raised button-small-caps" type="button"  onclick="gridLayout();" style="padding-right: 11px;padding-left: 11px;"/>Grid</button>
-										<button class="button-tiny button button-rounded button-raised button-small-caps" type="button"  onclick="circleLayout();" style="padding-right: 11px;padding-left: 11px;"/>Circle</button>
-										<button class="button-tiny button button-rounded button-raised button-small-caps" type="button"  onclick="colaLayout();" style="padding-right: 11px;padding-left: 11px;"/>Physics</button>
-										<button class="button-tiny button button-rounded button-raised button-small-caps" type="button"  onclick="concentricLayout();" style="padding-right: 11px;padding-left: 11px;"/>Concentric</button>
+										<button class="button-tiny button button-rounded button-raised button-small-caps" type="button"  onclick="spreadLayout();" style="padding-right: 10px;padding-left: 10px;"/>Spread</button>
+										<button class="button-tiny button button-rounded button-raised button-small-caps" type="button"  onclick="gridLayout();" style="padding-right: 10px;padding-left: 10px;"/>Grid</button>
+										<button class="button-tiny button button-rounded button-raised button-small-caps" type="button"  onclick="circleLayout();" style="padding-right: 10px;padding-left: 10px;"/>Circle</button>
+										<button class="button-tiny button button-rounded button-raised button-small-caps" type="button"  onclick="colaLayout();" style="padding-right: 10px;padding-left: 10px;"/>Physics</button>
+										<button class="button-tiny button button-rounded button-raised button-small-caps" type="button"  onclick="concentricLayout();" style="padding-right: 10px;padding-left: 10px;"/>Concentric</button>
 									</div>
 									<div id="saveButtonGroup" class="btn-group" style="float:left; margin-left: 5px; margin-left: 5px;font-size:14px;">
-										<button class="button-tiny button button-rounded button-raised button-small-caps" type="button" id="buttonjpg" onclick="saveNetworkAsJPG();" style="padding-right: 11px; padding-left: 11px;" />JPG</button>
-										<button class="button-tiny button button-rounded button-raised button-small-caps" type="button" id="buttonjson" onclick="saveNetworkAsJSON();" style="padding-right: 11px; padding-left: 11px;" />Cytoscape</button>
+										<button class="button-tiny button button-rounded button-raised button-small-caps" type="button" id="buttonjpg" onclick="saveNetworkAsJPG();" style="padding-right: 10px; padding-left: 10px;" />JPG</button>
+										<button class="button-tiny button button-rounded button-raised button-small-caps" type="button" id="buttonjson" onclick="saveNetworkAsJSON();" style="padding-right: 10px; padding-left: 10px;" />Cytoscape</button>
 									</div>
 								</div>
 										
