@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>PCxN</title>
+		<title>PCxN:videos</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link href="shared/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-		<link rel="stylesheet" type="text/css" href="pcxn.css">
+		<link rel="stylesheet" type="text/css" href="pcxn_central_lane.css">
 		<link rel="stylesheet" type="text/css" href="TableTools/css/dataTables.tableTools.css">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -18,7 +18,7 @@
 					</div>
 					<div class="col-sm-6" id="menu" style="text-align: right;">
 						<ul>
-							<li class="first"><a href="index.html" accesskey="1" title="">Home</a></li>
+							<li class="first"><a href="index_central_lane.html" accesskey="1" title="">Home</a></li>
 							<li><a href="news.html" accesskey="2" title="">News</a></li>
 							<li><a href="about.html" accesskey="3" title="">About</a></li>						
 							<li><a href="video.html" accesskey="4" title="">Video Tutorial</a></li>
@@ -28,9 +28,24 @@
 					</div>
 				</div>
 			</div>
-			<div class="container col-sm-12">          
-				<iframe width="854" height="480" src="https://www.youtube.com/embed/NpNAEbGPdiU" style="padding-left: 0px;margin: 0 auto;display: block;"></iframe>
-			</div>
+			<div class="container col-sm-12">     
+				<div class="container col-sm-6" style="text-align: center;">
+					<video  id="intro_video" width="569" height="320" poster="intro.png" style="border-color: blue;border-width: thick;" controls>
+						<source src="intro.mp4" type="video/mp4">
+					</video>
+				</div>
+				<div class="container col-sm-6" style="text-align: center;">
+					<video id="explore_video" width="569" height="320" poster="explore.png" style="border-color: blue;border-width: thick;" controls>
+						<source src="explore.mp4" type="video/mp4">
+					</video>
+				</div>
+			 </div>
+			 <div class="container col-sm-6 col-md-offset-3" style="text-align: center;">
+			 	<video class="container col-sm-12" id="analyze_video" width="569" height="320" poster="analyze.png" style="border-color: blue;border-width: thick;" controls>
+					<source src="analyze.mp4" type="video/mp4">
+				</video>
+			 </div>				
+
 		</div>
 	</body>
 </html>
