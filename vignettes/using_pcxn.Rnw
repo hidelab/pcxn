@@ -115,7 +115,7 @@ pcxn.obj <- pcxn.analyze("pathprint",c("ABC transporters (KEGG)",
                                         "AR down reg. targets (Netpath)"),
                             c("DNA Repair (Reactome)"), 10, 0.05, 0.05)
 
-# heatmap <- pcxn.heatmap(pcxn.obj, "complete")
+heatmap <- pcxn.heatmap(pcxn.obj, "complete")
 @
 
 \subsection{Create a network of a pcxn.obj}
