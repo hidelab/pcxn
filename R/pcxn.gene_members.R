@@ -27,7 +27,8 @@ pcxn.gene_members <- function(pathway_name = "Alzheimer's disease (KEGG)") {
     unloadNamespace("org.Hs.eg.db")
     attachNamespace("org.Hs.eg.db")
     
-    data(list = c("pathprint.Hs.gs", "h_gs_v5.1", "cp_gs_v5.1","gobp_gs_v5.1"))
+    data(list = c("pathprint.Hs.gs", "h_gs_v5.1", "cp_gs_v5.1","gobp_gs_v5.1"),
+        envir = environment())
     
     # every geneset we offer
     genesets <- c(pathprint.Hs.gs,h_gs_v5.1,

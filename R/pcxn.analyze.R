@@ -55,7 +55,8 @@ pcxn.analyze <-
                                 "pathCor_pathprint_v1.2.3_dframe",
                                 "pathCor_CPv5.1_dframe", "gobp_gs_v5.1",
                                 "PathCor", "p.value", "Pathway.A", 
-                                "Pathway.B"))
+                                "Pathway.B"), 
+            envir = environment())
         
         if(missing(phenotype_0_genesets) && missing(phenotype_1_genesets))
             stop( "Please insert phenotype_0_genesets and/or 

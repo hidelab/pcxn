@@ -3,9 +3,9 @@
 \docType{class}
 \name{pcxn.obj-class}
 \alias{pcxn.obj-class}
-\title{PCxN object which holds the type of analysis it came from, the data 
-produced by the analysis and the geneset groups involved. It can be produced by
-the pcxn.explore() or pcxn.analyze() functions.}
+\title{PCxN object which holds the type of analysis it came from, the data
+produced by the analysis and the geneset groups involved. It can be produced 
+by the pcxn.explore() or pcxn.analyze() functions.}
 \value{
 pcxn.obj with a type, data and geneset_grous field
 }
