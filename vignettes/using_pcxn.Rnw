@@ -1,0 +1,137 @@
+% \VignetteIndexEntry{pcxn}
+\documentclass{article}
+\usepackage{Sweave}
+\usepackage{amsmath}
+\usepackage{amscd}
+\usepackage[tableposition=top]{caption}
+\usepackage{ifthen}
+\usepackage[utf8]{inputenc}
+\usepackage{hyperref}
+\usepackage[usenames]{color}
+\definecolor{midnightblue}{rgb}{0.098,0.098,0.439}
+\definecolor{red}{rgb}{0.999,0.000,0.000}
+\DefineVerbatimEnvironment{Sinput}{Verbatim}{xleftmargin=2em,
+fontshape=sl,formatcom=\color{midnightblue}, fontsize=\small}
+\DefineVerbatimEnvironment{Soutput}{Verbatim}{xleftmargin=2em,
+fontshape=sl,formatcom=\color{red}, fontsize=\small}
+\DefineVerbatimEnvironment{Scode}{Verbatim}{xleftmargin=2em,
+fontshape=sl,formatcom=\color{midnightblue}, fontsize=\small}
+\fvset{listparameters={\setlength{\topsep}{0pt}}}
+\renewenvironment{Schunk}{\vspace{\topsep}}{\vspace{\topsep}}
+\SweaveOpts{keep.source=TRUE, pdf.version=1.4, eps = FALSE}
+\setkeys{Gin}{width=1.2\textwidth}
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+\title{About pcxn}
+\author{Sokratis Kariotis}
+\maketitle
+\tableofcontents
+\section{Description}
+This package contains correlation coefficients and p values between pre-defined
+gene sets within MSigDB H hallmark gene sets, MSigDB C2 CP (Canonical pathways),
+MSigDB C5 GO BP gene sets and Pathprint respectively.It also entails the gene
+members of each gene set or pathway.
+
+\section{Using pcxn wrapper functions to query and visualize the data}
+
+The various data in this package can be utilized using the following functions
+\begin{itemize}
+\item
+Select a single pathway/gene set from one of the four collections ( MSigDB H
+hallmark gene sets, MSigDB C2 Canonical pathways, MSigDB C5 GO BP gene sets,
+and Pathprint ) and discover its correlated pathway/gene sets within the
+same collection.
+\item
+Discover correlation relationships among multiple pathways/gene sets
+identified by GSEA (gene set enrichment analysis). All the input
+pathways/gene sets should come from the same collection. MSigDB H hallmark
+gene sets, MSigDB C2 Canonical pathways, MSigDB C5 GO BP gene sets,
+and Pathprint are treated as four separate collections.
+\item
+Acquire the gene members given one of the available pathways.
+\item
+Draw a heatmap of a pcxn object.
+\item
+Create a network of a pcxn object.
+\end{itemize}
+\subsection{Explore using a pathway or gene set}
+Each pathway collection (Pathprint, MSigDB H, MSigDB C2 CP and MSigDB C5 GO BP)
+can be explored using a single pathway of interest as a query. Alternatively,
+the relationships between groups of pathways, shown to be enriched by gene set
+enrichment, can be analysed. Both queries can be refined by choosing the number
+of top correlated gene sets, the minimum absolute correlation and maximum
+p-value allowed.
+
+<<queries>>=
+# Use the pcxn package to select a query gene set from
+# a specific collection while requesting the 10 most
+# correlated neighbors and specific cut-offs for
+# minimum absolute correlation and maximum p-value
+
+library(pcxn)
+
+pcxn.obj <- pcxn.explore(collection = "pathprint",
+                        query_geneset = "Alzheimer's disease (KEGG)",
+                        top = 10,
+                        min_abs_corr = 0.05,
+                        max_pval = 0.05)
+
+# Use the pcxn package to select one or two oathway groups from a specific
+# collection while requesting the 10 most correlated neighbors and specific
+# cut-offs for minimum absolute correlation and maximum p-value
+
+pcxn.obj <- pcxn.analyze("pathprint",c("ABC transporters (KEGG)",
+                                        "ACE Inhibitor Pathway (Wikipathways)",
+                                        "AR down reg. targets (Netpath)"),
+                            c("DNA Repair (Reactome)"), 10, 0.05, 0.05)
+@
+
+\subsection{Acquire gene members}
+Acquire the list of gene members that belong to any of the pathways or gene sets
+found in the pcxn database
+
+<<pcxn.gene_members>>=
+# Use the pcxn package to select pathway from any collection and get it's
+# gene members as a list
+
+library(pcxn)
+
+gene_member_list <- pcxn.gene_members("Alzheimer's disease (KEGG)")
+@
+
+\subsection{Draw a heatmap of a pcxn.obj}
+Draw a heatmap of a pcxn object produced by pcxn.explore() or pcxn.analyse(). A
+number of clustering methods are available. Color represents correlation
+coefficients.
+
+<<pcxn.heatmap>>=
+# Use the pcxn package to draw a heatmap based on a pcxn object
+
+library(pcxn)
+
+# Creare the pcxn.obj we need as an input
+pcxn.obj <- pcxn.analyze("pathprint",c("ABC transporters (KEGG)",
+                                        "ACE Inhibitor Pathway (Wikipathways)",
+                                        "AR down reg. targets (Netpath)"),
+                            c("DNA Repair (Reactome)"), 10, 0.05, 0.05)
+
+heatmap <- pcxn.heatmap(pcxn.obj, "complete")
+@
+
+\subsection{Create a network of a pcxn.obj}
+Create a network visualisation of a pcxn object produced by pcxn.explore()
+or pcxn.analyse().
+
+<<pcxn.network>>=
+# Use the pcxn package to draw a heatmap based on a pcxn object
+
+library(pcxn)
+
+pcxn.obj <- pcxn.analyze("pathprint",c("ABC transporters (KEGG)",
+                                        "ACE Inhibitor Pathway (Wikipathways)",
+                                        "AR down reg. targets (Netpath)"),
+                            c("DNA Repair (Reactome)"), 10, 0.05, 0.05)
+
+# network <- pcxn.network(pcxn.obj)
+@
+\end{document}

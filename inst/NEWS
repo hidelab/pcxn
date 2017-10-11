@@ -1,0 +1,8 @@
+**************************************************
+*               pcxn 1.0.0 NEWS                  *
+**************************************************
+
+- Added to the Bioconductor for the first time in October 2017
+
+- Current pathprint 1.0.0 collections (as seen in the official website http://pcxn.org:8080/): MSigDB H hallmark, MSigDB C2 (Canonical pathways), MSigDB C5 GO BP and Pathprint)
+

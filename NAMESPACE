@@ -1,0 +1,5 @@
+export(pcxn.explore, pcxn.analyze, pcxn.gene_members, pcxn.heatmap, 
+        pcxn.network)
+import("utils")
+importFrom("grDevices", "colorRampPalette")
+importFrom("methods", "new", "representation", "setClass")
