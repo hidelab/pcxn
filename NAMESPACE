@@ -3,3 +3,4 @@ export(pcxn.explore, pcxn.analyze, pcxn.gene_members, pcxn.heatmap,
 import("utils")
 importFrom("grDevices", "colorRampPalette")
 importFrom("methods", "new", "representation", "setClass")
+import("pcxnData")
