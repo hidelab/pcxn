@@ -43,7 +43,7 @@ pcxn.explore <- function(collection = c("pathprint","MSigDB_H","MSigDB_C2_CP",
                         max_pval = 0.05) {
     
     # data(list = c("pathprint.Hs.gs", "pathCor_Hv5.1_dframe",
-    #             "h_gs_v5.1", "cp_gs_v5.1","pathCor_GOBPv5.1_dframe"), 
+    #             "h_gs_v5.1", "cp_gs_v5.1","pathCor_GOBPv5.1_dframe"),
     #     envir = environment())
     
     if(missing(query_geneset))

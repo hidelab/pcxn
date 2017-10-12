@@ -71,6 +71,12 @@ p-value allowed.
 library(pcxn)
 library(pcxnData)
 
+data(list = c("pathprint.Hs.gs","pheatmap",
+                "pathCor_pathprint_v1.2.3_dframe",
+                "pathCor_CPv5.1_dframe", "gobp_gs_v5.1",
+                "PathCor", "p.value", "Pathway.A",
+                "Pathway.B"))
+
 pcxn.obj <- pcxn.explore(collection = "pathprint",
                         query_geneset = "Alzheimer's disease (KEGG)",
                         top = 10,
