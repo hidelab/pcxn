@@ -96,6 +96,7 @@ found in the pcxn database
 # gene members as a list
 
 library(pcxn)
+library(pcxnData)
 
 gene_member_list <- pcxn.gene_members("Alzheimer's disease (KEGG)")
 @
@@ -109,6 +110,7 @@ coefficients.
 # Use the pcxn package to draw a heatmap based on a pcxn object
 
 library(pcxn)
+library(pcxnData)
 
 # Creare the pcxn.obj we need as an input
 pcxn.obj <- pcxn.analyze("pathprint",c("ABC transporters (KEGG)",
@@ -127,6 +129,7 @@ or pcxn.analyse().
 # Use the pcxn package to draw a heatmap based on a pcxn object
 
 library(pcxn)
+library(pcxnData)
 
 pcxn.obj <- pcxn.analyze("pathprint",c("ABC transporters (KEGG)",
                                         "ACE Inhibitor Pathway (Wikipathways)",
