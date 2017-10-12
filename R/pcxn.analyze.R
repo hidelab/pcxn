@@ -51,6 +51,8 @@ pcxn.analyze <-
                 min_abs_corr = 0.05,
                 max_pval = 0.05 ) {
         
+        # library(pcxnData)
+        
         data(list = c("pathprint.Hs.gs","pheatmap",
                                 "pathCor_pathprint_v1.2.3_dframe",
                                 "pathCor_CPv5.1_dframe", "gobp_gs_v5.1",
