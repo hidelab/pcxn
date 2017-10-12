@@ -18,6 +18,6 @@ Create a network of a pcxn object
 \examples{
 # Create a network of a pcxn object
 df <- pcxn.explore("pathprint","Alzheimer's disease (KEGG)", 10, 0.05, 0.05)
-network <- pcxn.network(df)
+# network <- pcxn.network(df)
 
 }
