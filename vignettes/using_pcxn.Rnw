@@ -69,6 +69,7 @@ p-value allowed.
 # minimum absolute correlation and maximum p-value
 
 library(pcxn)
+library(pcxnData)
 
 pcxn.obj <- pcxn.explore(collection = "pathprint",
                         query_geneset = "Alzheimer's disease (KEGG)",
