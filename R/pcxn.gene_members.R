@@ -21,8 +21,6 @@ utils::globalVariables(c("org.Hs.eg.db", "annotate","getSYMBOL"))
 
 pcxn.gene_members <- function(pathway_name = "Alzheimer's disease (KEGG)") {
     
-    library(pcxnData)
-    
     requireNamespace("org.Hs.eg.db",quietly = TRUE)
     unloadNamespace("org.Hs.eg.db")
     attachNamespace("org.Hs.eg.db")

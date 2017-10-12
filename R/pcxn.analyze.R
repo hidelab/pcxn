@@ -51,15 +51,6 @@ pcxn.analyze <-
                 min_abs_corr = 0.05,
                 max_pval = 0.05 ) {
         
-        # library(pcxnData)
-        
-        # data(list = c("pathprint.Hs.gs","pheatmap",
-        #                         "pathCor_pathprint_v1.2.3_dframe",
-        #                         "pathCor_CPv5.1_dframe", "gobp_gs_v5.1",
-        #                         "PathCor", "p.value", "Pathway.A", 
-        #                         "Pathway.B"), 
-        #     envir = environment())
-        
         if(missing(phenotype_0_genesets) && missing(phenotype_1_genesets))
             stop( "Please insert phenotype_0_genesets and/or 
                     phenotype_1_genesets arguments")

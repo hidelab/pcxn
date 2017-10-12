@@ -42,10 +42,6 @@ pcxn.explore <- function(collection = c("pathprint","MSigDB_H","MSigDB_C2_CP",
                         min_abs_corr = 0.05,
                         max_pval = 0.05) {
     
-    # data(list = c("pathprint.Hs.gs", "pathCor_Hv5.1_dframe",
-    #             "h_gs_v5.1", "cp_gs_v5.1","pathCor_GOBPv5.1_dframe"),
-    #     envir = environment())
-    
     if(missing(query_geneset))
         stop( "Please insert query_geneset argument")
     
