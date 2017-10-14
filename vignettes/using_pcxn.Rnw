@@ -105,8 +105,8 @@ gene_member_list <- pcxn_gene_members("Alzheimer's disease (KEGG)")
 @
 
 \subsection{Draw a heatmap of a pcxn object}
-Draw a heatmap of a pcxn object produced by pcxn_explore() or pcxn.analyse(). A
-number of clustering methods are available. Color represents correlation
+Draw a heatmap of a pcxn object. A number of clustering methods are available. 
+Color represents correlation
 coefficients.
 
 <<pcxn_heatmap>>=
@@ -121,8 +121,7 @@ heatmap <- pcxn_heatmap(pcxn.obj, "complete")
 @
 
 \subsection{Create a network of a pcxn object}
-Create a network visualisation of a pcxn object produced by pcxn_explore()
-or pcxn_analyze().
+Create a network visualisation of a pcxn object.
 
 <<pcxn_network>>=
 # Create the pcxn object needed as an input
