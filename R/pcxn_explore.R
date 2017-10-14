@@ -31,11 +31,11 @@ utils::globalVariables(c("pathprint.Hs.gs", "pathCor_Hv5.1_dframe",
 #'
 #' @examples
 #' \dontrun{
-#'  pcxn.explore("pathprint","Alzheimer's disease (KEGG)", 10,
+#'  pcxn<- pcxn_explore("pathprint","Alzheimer's disease (KEGG)", 10,
 #'  0.05, 0.05)
 #' }
 
-pcxn.explore <- function(collection = c("pathprint","MSigDB_H","MSigDB_C2_CP",
+pcxn_explore <- function(collection = c("pathprint","MSigDB_H","MSigDB_C2_CP",
                                         "MSigDB_C5_GO_BP"),
                         query_geneset,
                         top = 10,
@@ -45,7 +45,7 @@ pcxn.explore <- function(collection = c("pathprint","MSigDB_H","MSigDB_C2_CP",
     if(missing(query_geneset))
         stop( "Please insert query_geneset argument")
     
-    # loading the datasets, when the package is complete we shall use data(...)
+    # loading the datasets
     correct_query_geneset_flag <- FALSE
     acceptable_collections = c("pathprint","MSigDB_H","MSigDB_C2_CP",
                                 "MSigDB_C5_GO_BP")
@@ -116,11 +116,8 @@ pcxn.explore <- function(collection = c("pathprint","MSigDB_H","MSigDB_C2_CP",
                 " top correlated genesets, ", dim(step3_matrix)[1],
                 " correlation pairs were found.", sep =""))
     
-    # setClass("pcxn_obj", representation(type = "character" , data = "matrix",
-    #    geneset_groups = "list"))
-    
-    po = new("pcxn.obj",type = "pcxn.explore",  data = as.matrix(step3_matrix),
-            geneset_groups = as.list(info) )
+    po = new("pcxn",type = "pcxn_explore", data = as.matrix(step3_matrix),
+            geneset_groups = as.list(info))
     
     return(po)
 }

@@ -15,11 +15,10 @@ utils::globalVariables(c("org.Hs.eg.db", "annotate","getSYMBOL"))
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#'  pcxn.gene_members("Alzheimer's disease (KEGG)")
-#' }
+#' # Get the members of a single pathway
+#' genelist <- pcxn_gene_members("Alzheimer's disease (KEGG)")
 
-pcxn.gene_members <- function(pathway_name = "Alzheimer's disease (KEGG)") {
+pcxn_gene_members <- function(pathway_name = "Alzheimer's disease (KEGG)") {
     
     requireNamespace("org.Hs.eg.db",quietly = TRUE)
     unloadNamespace("org.Hs.eg.db")

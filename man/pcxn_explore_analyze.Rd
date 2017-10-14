@@ -1,19 +1,19 @@
-\name{pcxn.explore_analyze}
-\alias{pcxn.explore}
-\alias{pcxn.analyze}
+\name{pcxn_explore_analyze}
+\alias{pcxn_explore}
+\alias{pcxn_analyze}
 
 \title{Discover correlated pathway/gene sets of a single pathway/gene set or
 correlation relationships among multiple pathways/gene sets.}
 
 \usage{
-pcxn.explore(collection = c("pathprint", "MSigDB_H","MSigDB_C2_CP",
+pcxn_explore(collection = c("pathprint", "MSigDB_H","MSigDB_C2_CP",
                             "MSigDB_C5_GO_BP"),
             query_geneset,
             top = 10,
             min_abs_corr = 0.05,
             max_pval = 0.05)
 
-pcxn.analyze(collection = c("pathprint", "MSigDB_H","MSigDB_C2_CP",
+pcxn_analyze(collection = c("pathprint", "MSigDB_H","MSigDB_C2_CP",
                             "MSigDB_C5_GO_BP"),
             phenotype_0_genesets,
             phenotype_1_genesets,
@@ -23,7 +23,7 @@ pcxn.analyze(collection = c("pathprint", "MSigDB_H","MSigDB_C2_CP",
 }
 
 \arguments{
-\item{collection}{pathways' collectionchosen among:
+\item{collection}{pathways' collection chosen among:
                         "pathprint", "MSigDB_H", "MSigDB_C2_CP",
                         "MSigDB_C5_GO_BP"}
 
@@ -41,7 +41,7 @@ pcxn.analyze(collection = c("pathprint", "MSigDB_H","MSigDB_C2_CP",
 }
 
 \value{
-an pcxn object
+a pcxn object
 }
 
 \references{
@@ -53,12 +53,12 @@ Relationships."
 \author{Sokratis Kariotis}
 
 \description{
-Using pcxn.explore, select a single pathway/gene set from one of the four
+Using pcxn_explore, select a single pathway/gene set from one of the four
 collections ( MSigDB H hallmark gene sets, MSigDB C2 Canonical pathways, 
 MSigDB C5 GO BP gene sets, and Pathprint ) and discover its correlated 
 pathway/gene sets within the same collection.
 
-Using pcxn.analyze, discover correlation relationships among multiple 
+Using pcxn_analyze, discover correlation relationships among multiple 
 pathways/gene sets identified by GSEA (gene set enrichment analysis). All the 
 input pathways/gene sets should come from the same collection. MSigDB H hallmark
 gene sets, MSigDB C2 Canonical pathways, MSigDB C5 GO BP gene sets,
@@ -67,25 +67,25 @@ and Pathprint are treated as four separate collections.
 
 \examples{
 
-# pcxn.explore function can be used with the default parameters:
-pcxn.explore("pathprint","Alzheimer's disease (KEGG)")
+# pcxn_explore function can be used with the default parameters:
+pcxn_explore("pathprint","Alzheimer's disease (KEGG)")
 
 
 # If specific parameters are desired we can use the full list of arguments:
-pcxn.explore("pathprint","Alzheimer's disease (KEGG)",
+pcxn_explore("pathprint","Alzheimer's disease (KEGG)",
                                 100, 0.02, 0.045)
 
-# pcxn.analyze can be used with two gene sets and the default parameters:
-pcxn.analyze("pathprint",c("ABC transporters (KEGG)",
+# pcxn_analyze can be used with two gene sets and the default parameters:
+pcxn_analyze("pathprint",c("ABC transporters (KEGG)",
                             "ACE Inhibitor Pathway (Wikipathways)",
                             "AR down reg. targets (Netpath)"),
                             c("DNA Repair (Reactome)"))
 
 # Alternatively, you can use only one gene set:
-pcxn.analyze("MSigDB_H",c("HALLMARK_COAGULATION","HALLMARK_UV_RESPONSE_UP"))
+pcxn_analyze("MSigDB_H",c("HALLMARK_COAGULATION","HALLMARK_UV_RESPONSE_UP"))
 
 # If specific parameters are desired we can use the full list of arguments:
-pcxn.analyze("pathprint",c("ABC transporters (KEGG)",
+pcxn_analyze("pathprint",c("ABC transporters (KEGG)",
                             "ACE Inhibitor Pathway (Wikipathways)",
                             "AR down reg. targets (Netpath)"),
                             c("DNA Repair (Reactome)"),

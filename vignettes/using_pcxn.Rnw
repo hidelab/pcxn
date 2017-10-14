@@ -27,14 +27,15 @@ fontshape=sl,formatcom=\color{midnightblue}, fontsize=\small}
 \maketitle
 \tableofcontents
 \section{Description}
-This package contains correlation coefficients and p values between pre-defined
-gene sets within MSigDB H hallmark gene sets, MSigDB C2 CP (Canonical pathways),
-MSigDB C5 GO BP gene sets and Pathprint respectively.It also entails the gene
-members of each gene set or pathway.
+Discover the correlated pathways/gene sets of a single pathway/gene set or 
+discover correlation relationships among multiple pathways/gene sets. Draw a 
+heatmap or create a network of your query and extract members of each 
+pathway/gene set found in the available collections (MSigDB H hallmark, 
+MSigDB C2 Canonical pathways, MSigDB C5 GO BP and Pathprint). 
 
 \section{Using pcxn wrapper functions to query and visualize the data}
 
-The various data in this package can be utilized using the following functions
+The data from the pcxnData package can be utilized using the following functions
 \begin{itemize}
 \item
 Select a single pathway/gene set from one of the four collections ( MSigDB H
@@ -48,7 +49,7 @@ pathways/gene sets should come from the same collection. MSigDB H hallmark
 gene sets, MSigDB C2 Canonical pathways, MSigDB C5 GO BP gene sets,
 and Pathprint are treated as four separate collections.
 \item
-Acquire the gene members given one of the available pathways.
+Acquire the gene members of one of the available pathways.
 \item
 Draw a heatmap of a pcxn object.
 \item
@@ -63,10 +64,9 @@ of top correlated gene sets, the minimum absolute correlation and maximum
 p-value allowed.
 
 <<queries>>=
-# Use the pcxn package to select a query gene set from
-# a specific collection while requesting the 10 most
-# correlated neighbors and specific cut-offs for
-# minimum absolute correlation and maximum p-value
+# Select a query gene set from a specific collection while requesting 
+# the 10 most correlated neighbors and specific cut-offs for minimum absolute 
+# correlation and maximum p-value
 
 library(pcxn)
 library(pcxnData)
@@ -77,17 +77,17 @@ data(list = c("pathprint.Hs.gs","pheatmap",
                 "PathCor", "p.value", "Pathway.A",
                 "Pathway.B"))
 
-pcxn.obj <- pcxn.explore(collection = "pathprint",
+pcxn.obj <- pcxn_explore(collection = "pathprint",
                         query_geneset = "Alzheimer's disease (KEGG)",
                         top = 10,
                         min_abs_corr = 0.05,
                         max_pval = 0.05)
 
-# Use the pcxn package to select one or two oathway groups from a specific
-# collection while requesting the 10 most correlated neighbors and specific
-# cut-offs for minimum absolute correlation and maximum p-value
+# Select one or two pathway groups from a specific collection while requesting 
+# the 10 most correlated neighbors and specific cut-offs for minimum absolute 
+# correlation and maximum p-value
 
-pcxn.obj <- pcxn.analyze("pathprint",c("ABC transporters (KEGG)",
+pcxn.obj <- pcxn_analyze("pathprint",c("ABC transporters (KEGG)",
                                         "ACE Inhibitor Pathway (Wikipathways)",
                                         "AR down reg. targets (Netpath)"),
                             c("DNA Repair (Reactome)"), 10, 0.05, 0.05)
@@ -97,51 +97,41 @@ pcxn.obj <- pcxn.analyze("pathprint",c("ABC transporters (KEGG)",
 Acquire the list of gene members that belong to any of the pathways or gene sets
 found in the pcxn database
 
-<<pcxn.gene_members>>=
+<<pcxn_gene_members>>=
 # Use the pcxn package to select pathway from any collection and get it's
 # gene members as a list
 
-# library(pcxn)
-# library(pcxnData)
-
-gene_member_list <- pcxn.gene_members("Alzheimer's disease (KEGG)")
+gene_member_list <- pcxn_gene_members("Alzheimer's disease (KEGG)")
 @
 
-\subsection{Draw a heatmap of a pcxn.obj}
-Draw a heatmap of a pcxn object produced by pcxn.explore() or pcxn.analyse(). A
+\subsection{Draw a heatmap of a pcxn object}
+Draw a heatmap of a pcxn object produced by pcxn_explore() or pcxn.analyse(). A
 number of clustering methods are available. Color represents correlation
 coefficients.
 
-<<pcxn.heatmap>>=
-# Use the pcxn package to draw a heatmap based on a pcxn object
-
-# library(pcxn)
-# library(pcxnData)
-
-# Creare the pcxn.obj we need as an input
-pcxn.obj <- pcxn.analyze("pathprint",c("ABC transporters (KEGG)",
+<<pcxn_heatmap>>=
+# Creare the pcxn object needed as an input
+pcxn.obj <- pcxn_analyze("pathprint",c("ABC transporters (KEGG)",
                                         "ACE Inhibitor Pathway (Wikipathways)",
                                         "AR down reg. targets (Netpath)"),
                             c("DNA Repair (Reactome)"), 10, 0.05, 0.05)
 
-heatmap <- pcxn.heatmap(pcxn.obj, "complete")
+# Draw the heatmap
+heatmap <- pcxn_heatmap(pcxn.obj, "complete")
 @
 
-\subsection{Create a network of a pcxn.obj}
-Create a network visualisation of a pcxn object produced by pcxn.explore()
-or pcxn.analyse().
+\subsection{Create a network of a pcxn object}
+Create a network visualisation of a pcxn object produced by pcxn_explore()
+or pcxn_analyze().
 
-<<pcxn.network>>=
-# Use the pcxn package to draw a heatmap based on a pcxn object
-
-# library(pcxn)
-# library(pcxnData)
-
-pcxn.obj <- pcxn.analyze("pathprint",c("ABC transporters (KEGG)",
+<<pcxn_network>>=
+# Create the pcxn object needed as an input
+pcxn.obj <- pcxn_analyze("pathprint",c("ABC transporters (KEGG)",
                                         "ACE Inhibitor Pathway (Wikipathways)",
                                         "AR down reg. targets (Netpath)"),
                             c("DNA Repair (Reactome)"), 10, 0.05, 0.05)
 
-# network <- pcxn.network(pcxn.obj)
+# Create the network
+# network <- pcxn_network(pcxn.obj)
 @
 \end{document}

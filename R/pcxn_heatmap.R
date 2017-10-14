@@ -15,11 +15,9 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#'  pcxn.heatmap(df, "complete")
-#' }
+#' hm <- pcxn_heatmap(df, "complete")
 
-pcxn.heatmap <- function(df , cluster_method = "complete") {
+pcxn_heatmap <- function(df , cluster_method = "complete") {
     
     avail_cl_methods <- c("ward.D", "ward.D2", "single", "complete", "average",
                         "mcquitty", "median", "centroid")

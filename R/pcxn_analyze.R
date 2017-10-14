@@ -38,12 +38,12 @@ utils::globalVariables(c("pathprint.Hs.gs","pheatmap",
 #'
 #' @examples
 #' \dontrun{
-#'  pcxn.analyze("pathprint",c("ABC transporters (KEGG)",
+#'  pcxn_analyze("pathprint",c("ABC transporters (KEGG)",
 #'  "ACE Inhibitor Pathway (Wikipathways)","AR down reg. targets (Netpath)"),
 #'   c("DNA Repair (Reactome)"), 10, 0.05, 0.05)
 #' }
 
-pcxn.analyze <-
+pcxn_analyze <-
     function(collection = c("pathprint","MSigDB_H","MSigDB_C2_CP",
                             "MSigDB_C5_GO_BP"),
                 phenotype_0_genesets = NULL,phenotype_1_genesets = NULL,
@@ -190,9 +190,8 @@ pcxn.analyze <-
                         top, " top correlated genesets, ", dim(step2_matrix)[1],
                         " correlation pairs were found.", sep =""))
         
-        po = new("pcxn.obj",type = "pcxn.analyze", 
-                    data = as.matrix(step2_matrix),
-                    geneset_groups = as.list(info) )
+        po = new("pcxn",type = "pcxn_analyze", data = as.matrix(step2_matrix),
+                geneset_groups = as.list(info))
         
         return(po)
     }

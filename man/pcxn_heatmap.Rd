@@ -1,11 +1,11 @@
-\name{pcxn.heatmap}
-\alias{pcxn.heatmap}
+\name{pcxn_heatmap}
+\alias{pcxn_heatmap}
 \title{Draw a heatmap of a pcxn object}
 \usage{
-pcxn.heatmap(df, cluster_method = "complete")
+pcxn_heatmap(df, cluster_method = "complete")
 }
 \arguments{
-\item{df}{pcxn object created by explore or analyze functions}
+\item{df}{pcxn object created by pcxn_explore or pcxn_analyze functions}
 
 \item{cluster_method}{clustering method drawn from:
 "ward.D", "ward.D2", "single", "complete", "average",
@@ -20,10 +20,11 @@ Draw a heatmap of a pcxn object where color represents correlation
 coefficients.
 }
 \seealso{
-    \code{\link{pcxn.network}}
+    \code{\link{pcxn_network}}
 }
 \examples{
 # Draw a heatmap of a pcxn object with a specific clustering method
-df <- pcxn.explore("pathprint","Alzheimer's disease (KEGG)", 10, 0.05, 0.05)
-pcxn.heatmap(df, "complete")
+df <- pcxn_explore("pathprint","Alzheimer's disease (KEGG)", 10, 0.05, 0.05)
+
+pcxn_heatmap(df, "complete")
 }

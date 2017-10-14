@@ -22,12 +22,10 @@ utils::globalVariables(c("igraph", "layout_in_circle","make_graph","V","V<-",
 #'
 #' @examples
 #' \dontrun{
-#' network <- pcxn.network(df)
+#' network <- pcxn_network(df)
 #' }
 
-pcxn.network <- function(df) {
-    
-    # requireNamespace(igraph)
+pcxn_network <- function(df) {
     
     edges <- c()
     edge_thickness <- c()

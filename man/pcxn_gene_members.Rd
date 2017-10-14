@@ -1,11 +1,11 @@
-\name{pcxn.gene_members}
-\alias{pcxn.gene_members}
-\title{Acquire the gene members of a pcxn pathway}
+\name{pcxn_gene_members}
+\alias{pcxn_gene_members}
+\title{Acquire the gene members of a pathway from the pcxn database}
 \usage{
-pcxn.gene_members(pathway_name = "Alzheimer's disease (KEGG)")
+pcxn_gene_members(pathway_name = "Alzheimer's disease (KEGG)")
 }
 \arguments{
-\item{pathway_name}{the  pathway whose members we want}
+\item{pathway_name}{the pathway whose members we want}
 }
 \value{
 a list of gene names and Ids
@@ -18,5 +18,5 @@ gene sets or Pathprint genesets
 }
 \examples{
 # Get the members of a single pathway
-pcxn.gene_members("Alzheimer's disease (KEGG)")
+pcxn_gene_members("Alzheimer's disease (KEGG)")
 }
