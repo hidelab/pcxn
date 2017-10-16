@@ -24,7 +24,7 @@ utils::globalVariables(c("igraph", "layout_in_circle","make_graph","V","V<-",
 #' # Create a network of a pcxn object
 #' df <- pcxn_explore("pathprint","Alzheimer's disease (KEGG)", 10, 0.05, 0.05)
 #' 
-#' network <- pcxn_network(df)
+#' # network <- pcxn_network(df)
 #' 
 
 pcxn_network <- function(df) {
