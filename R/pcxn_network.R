@@ -21,9 +21,9 @@ utils::globalVariables(c("igraph", "layout_in_circle","make_graph","V","V<-",
 #' @export
 #'
 #' @examples
-#' \dontrun{
+#' 
 #' network <- pcxn_network(df)
-#' }
+#' 
 
 pcxn_network <- function(df) {
     
