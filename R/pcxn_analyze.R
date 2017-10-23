@@ -178,12 +178,12 @@ pcxn_analyze <-
                         Pathway.B %in% interesting_genesets)
         
         if(length(phenotype_1_genesets) == 0)
-            print(paste("Successful exploring: Based on phenotype 0 [",
+            print(paste("Successful analyzing: Based on phenotype 0 [",
                         paste(phenotype_0_genesets, collapse=', ' ),"] and ",
                         top, " top correlated genesets, ", dim(step2_matrix)[1],
                         " correlation pairs were found.", sep =""))
         else
-            print(paste("Successful exploring: Based on phenotype 0 [",
+            print(paste("Successful analyzing: Based on phenotype 0 [",
                         paste(phenotype_0_genesets, collapse=', ' ),
                         "], phenotype 1 [",
                         paste(phenotype_1_genesets, collapse=', ' ),"] and ",

@@ -1,5 +1,7 @@
 export(pcxn_explore, pcxn_analyze, pcxn_gene_members, pcxn_heatmap, 
         pcxn_network)
 import("utils","methods")
+import("pheatmap")
+import("org.Hs.eg.db")
 importFrom("grDevices", "colorRampPalette")
 import("pcxnData")

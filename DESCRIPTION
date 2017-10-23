@@ -1,6 +1,6 @@
 Package: pcxn
 Type: Package
-Version: 0.99.23
+Version: 0.99.24
 Title: Exploring, analyzing and visualizing functions utilizing the PCxN database
 Description: Discover the correlated pathways/gene sets of a single pathway/gene set or discover correlation relationships among multiple pathways/gene sets. Draw a heatmap or create a network of your query and extract members of each pathway/gene set found in the available collections (MSigDB H hallmark, MSigDB C2 Canonical pathways, MSigDB C5 GO BP and Pathprint). 
 Author: Sokratis Kariotis, Yered Pita-Juarez, Winston Hide, Wenbin Wei
@@ -8,8 +8,8 @@ Maintainer: Sokratis Kariotis <s.kariotis@sheffield.ac.uk>
 License: MIT + file LICENSE
 biocViews: ExperimentData, ExpressionData, MicroarrayData, GEO, Homo_sapiens_Data, OneChannelData, PathwayInteractionDatabase
 NeedsCompilation: no
-Suggests: org.Hs.eg.db, pheatmap, igraph, annotate
-Imports: methods, grDevices, utils
+Suggests: igraph, annotate
+Imports: methods, grDevices, utils, pheatmap, org.Hs.eg.db
 Depends: R (>= 3.4), pcxnData
 Encoding: UTF-8
 RoxygenNote: 6.0.1
