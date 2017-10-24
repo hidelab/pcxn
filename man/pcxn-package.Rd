@@ -2,8 +2,8 @@
 \alias{Introduction to pcxn}
 \alias{pcxn}
 \docType{package}
-\title{Exploring, analyzing and visualizing functions utilizing the PCxN 
-database}
+\title{Exploring, analyzing and visualizing functions utilizing the pcxnData 
+package}
 \description{
 Discover the correlated pathways/gene sets of a single pathway/gene set or 
 discover correlation relationships among multiple pathways/gene sets. Draw a 

@@ -95,7 +95,7 @@ pcxn.obj <- pcxn_analyze("pathprint",c("ABC transporters (KEGG)",
 
 \subsection{Acquire gene members}
 Acquire the list of gene members that belong to any of the pathways or gene sets
-found in the pcxn database
+found in the pcxnData package
 
 <<pcxn_gene_members>>=
 # Use the pcxn package to select pathway from any collection and get it's

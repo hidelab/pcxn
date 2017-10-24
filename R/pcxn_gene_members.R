@@ -46,9 +46,9 @@ pcxn_gene_members <- function(pathway_name = "Alzheimer's disease (KEGG)") {
                                                     data='org.Hs.eg')
     
     geneset_matrix = matrix(0,nrow=length(result_genesets), 2)
-    colnames(geneset_matrix) = c("Entrez ids","Gene name")
-    geneset_matrix[,"Entrez ids"] <- result_genesets
-    geneset_matrix[,"Gene name"] <- result_genesets_symbols
+    colnames(geneset_matrix) = c("Entrez IDs","gene symbols")
+    geneset_matrix[,"Entrez IDs"] <- result_genesets
+    geneset_matrix[,"gene symbols"] <- result_genesets_symbols
     unloadNamespace("org.Hs.eg.db")
     return(geneset_matrix)
 }

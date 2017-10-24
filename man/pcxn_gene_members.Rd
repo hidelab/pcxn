@@ -1,6 +1,6 @@
 \name{pcxn_gene_members}
 \alias{pcxn_gene_members}
-\title{Acquire the gene members of a pathway from the pcxn database}
+\title{Acquire the gene members of a pathway from the pcxnData package}
 \usage{
 pcxn_gene_members(pathway_name = "Alzheimer's disease (KEGG)")
 }
@@ -8,7 +8,7 @@ pcxn_gene_members(pathway_name = "Alzheimer's disease (KEGG)")
 \item{pathway_name}{the pathway whose members we want}
 }
 \value{
-a list of gene names and Ids
+a matrix of Entrez IDs and gene symbols
 }
 \author{Sokratis Kariotis}
 \description{
