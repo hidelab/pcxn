@@ -8,8 +8,8 @@ Maintainer: Sokratis Kariotis <s.kariotis@sheffield.ac.uk>
 License: MIT + file LICENSE
 biocViews: ExperimentData, ExpressionData, MicroarrayData, GEO, Homo_sapiens_Data, OneChannelData, PathwayInteractionDatabase
 NeedsCompilation: no
-Suggests: igraph, annotate
-Imports: methods, grDevices, utils, pheatmap, org.Hs.eg.db
+Suggests: igraph, annotate, org.Hs.eg.db
+Imports: methods, grDevices, utils, pheatmap
 Depends: R (>= 3.4), pcxnData
 Encoding: UTF-8
 RoxygenNote: 6.0.1
