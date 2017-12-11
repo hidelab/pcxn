@@ -14,7 +14,7 @@
 	String tblName = "genesetname_genesetdb_tbl";
 	
 	String JDBC_DRIVER = "com.mysql.jdbc.Driver";  
-	String DB_URL = "jdbc:mysql://localhost/pcxn_database";
+	String DB_URL = "jdbc:mysql://localhost/pcxn_database_yered";
 
 	//  Database credentials
 	String USER = "";

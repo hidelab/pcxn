@@ -449,7 +449,19 @@
 				for(var i = 0; i < outputGenesetNames.length; ++i){
 					correlationMatrix[i] = [];
 					for (var j = 0; j < outputGenesetNames.length; ++j){
-						correlationMatrix[i][j] = 0;
+						
+						slide1_on = document.getElementById("adjustSwitch1").checked
+						slide2_on = document.getElementById("adjustSwitch2").checked
+						explore_mode = localStorage.getItem("explore")
+						analyze_mode = !localStorage.getItem("explore")
+						
+						if ((slide2_on && explore_mode)||(slide1_on && analyze_mode)) {
+							correlationMatrix[i][j] = 0;
+						}
+						else if (((!slide2_on) && explore_mode)||((!slide1_on) && analyze_mode)) {
+							correlationMatrix[i][j] = 1;
+						}
+						
 					}
 				}
 				
@@ -1114,7 +1126,6 @@
 					}
 					else 
 						$.getJSON("getCorrelationUnadjusted.jsp", parms).done(handleFormResponse);
-					
 				} else {
 					//alert("You have not changed parameters!")
 					handleFormResponse(formResponse);
@@ -1509,7 +1520,7 @@
 				        title: '<b>Choose adjusted or unadjusted correlation coefficients</b>',
 				        placement: "top",
 				        trigger: "hover",
-				        content : "To allow researchers to identify highly overlapping pathway relationships our web tool provides the option to view a pathway network using unadjusted correlation coefficients (<b>Gray/unchecked</b>) as well as the network built using the partial correlation PCxN method (<b>Blue/checked</b>)." ,
+				        content : "To identify highly overlapping pathway relationships view a pathway network using unadjusted correlation coefficients (<b>Gray/unchecked</b>), otherwise opt for the network built using the partial correlation PCxN method (<b>Blue/checked</b>)." ,
 				        html: true,
 				        container: "body"
 				    });
@@ -1522,7 +1533,7 @@
 				        title: '<b>Choose adjusted or unadjusted correlation coefficients</b>',
 				        placement: "top",
 				        trigger: "hover",
-				        content : "To allow researchers to identify highly overlapping pathway relationships our web tool provides the option to view a pathway network using unadjusted correlation coefficients (<b>Gray/unchecked</b>) as well as the network built using the partial correlation PCxN method (<b>Blue/checked</b>)." ,
+				        content : "To identify highly overlapping pathway relationships view a pathway network using unadjusted correlation coefficients (<b>Gray/unchecked</b>), otherwise opt for the network built using the partial correlation PCxN method (<b>Blue/checked</b>)." ,
 				        html: true,
 				        container: "body"
 				    });

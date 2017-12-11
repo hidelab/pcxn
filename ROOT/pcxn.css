@@ -29,12 +29,16 @@ body {
 	height: 450px;
 	background: #ffffff;
 	float:right;
+	border:none;
+	box-shadow: none;
 }
 
 #form2 {
 	height: 531px;
 	background: #ffffff;
 	float:right;
+	border:none;
+	box-shadow: none;
 }
 
 #button1, #button3 {
