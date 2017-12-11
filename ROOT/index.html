@@ -11,20 +11,33 @@
 <!-- <meta name="viewport"			content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, minimal-ui"> -->
 <meta name="viewport"			content="width=device-width, user-scalable=no, initial-scale=1.0, minimal-ui">
 
-<!-- Load all .js and .css required -->
-<script src="js/canvasXpress.min.js"></script>
+<!-- These have to go first. Here we update jquery without breaking the universe -->
+<script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.0.0.js"></script>
+<script src="https://code.jquery.com/jquery-migrate-3.0.1.js"></script>
+
+<!-- DataTable stuff-->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.16/b-1.4.2/b-flash-1.4.2/b-html5-1.4.2/datatables.min.css"/>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.16/b-1.4.2/b-flash-1.4.2/b-html5-1.4.2/datatables.min.js"></script>
+
+<!-- Bootstrap stuff -->
 <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" />
+<link href="shared/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+<script	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<!-- CSS files -->
 <link rel="stylesheet" href="css/sbg.css" />
 <link rel="stylesheet" href="css/buttons.css" />
-<script type="text/javascript" src="js/sbg.js"></script>
-<link rel="stylesheet" type="text/css" href="css/jquery.dataTables.css">
-<script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
+
+<!-- jquery files -->
 <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-<script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
-<link href="shared/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-<link rel="stylesheet" type="text/css" href="TableTools/css/dataTables.tableTools.css">
-<script type="text/javascript" src="TableTools/js/dataTables.tableTools.js"></script>
-<link rel="stylesheet" type="text/css" href="pcxn.css">
+<script type="text/javascript" src="js/jquery.autocomplete.js"></script>
+
+<!-- js files -->
+<script src="js/canvasXpress.min.js"></script>
+<script type="text/javascript" src="js/sbg.js"></script>
 <script src="js/cytoscape.js"></script>
 <script src="js/FileSaver.js"></script>
 <script src="js/cola.js"></script>
@@ -32,8 +45,10 @@
 <script src="http://marvl.infotech.monash.edu/webcola/cola.v3.min.js"></script>
 <script	src="https://cdn.rawgit.com/cytoscape/cytoscape.js-cola/1.1.1/cytoscape-cola.js"></script>
 <script	src="https://cdn.rawgit.com/cytoscape/cytoscape.js-cose-bilkent/1.0.5/cytoscape-cose-bilkent.js"></script>
-<script	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="js/jquery.autocomplete.js"></script>
+<!-- <script type="text/javascript" src="TableTools/js/dataTables.tableTools.js"></script> -->
+
+<!-- Main css file -->
+<link rel="stylesheet" type="text/css" href="pcxn.css">
 
 <!-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jq-2.2.4/jszip-2.5.0/pdfmake-0.1.18/dt-1.10.13/b-1.2.4/b-colvis-1.2.4/b-flash-1.2.4/b-html5-1.2.4/b-print-1.2.4/cr-1.3.2/fc-3.2.2/fh-3.1.2/kt-2.2.0/r-2.1.0/rr-1.2.0/sc-1.4.2/se-1.2.0/datatables.min.css"> -->
 <!-- <script type="text/javascript" src="https://cdn.datatables.net/v/dt/jq-2.2.4/jszip-2.5.0/pdfmake-0.1.18/dt-1.10.13/b-1.2.4/b-colvis-1.2.4/b-flash-1.2.4/b-html5-1.2.4/b-print-1.2.4/cr-1.3.2/fc-3.2.2/fh-3.1.2/kt-2.2.0/r-2.1.0/rr-1.2.0/sc-1.4.2/se-1.2.0/datatables.min.js"></script> -->
@@ -68,6 +83,7 @@
 // 			var originDBname = "MSigDBC2CP";
 			var originDB = [];
 			var availableGenesets;
+			var overlap_adj;
 			
 			// Handler for Explore/Analyze decision
 			$(document).ready(function(){
@@ -79,9 +95,7 @@
 				// Access current domain's local Storage object. 
 				var tmp = localStorage.getItem("explore");
 				
-    			if (tmp===null) {
-                    tmp=="true"
-                }
+    			if (tmp===null) {tmp=="true"}
                 explore = (tmp=="true");
                 sizeCanvas();
                 if(explore) {
@@ -102,69 +116,51 @@
                 //localStorage.clear();
                 //alert(explore);
 			    var tmp = localStorage.getItem("explore");
-    			if (tmp===null) {
-                    tmp=="true"
-                }
+    			if (tmp===null) {tmp=="true"}
                 explore = (tmp=="true");
                 
                 if (!explore) {
                     document.getElementById("radioAnalysis2").checked = true;
                     tmp = localStorage.getItem("upgenesets");
-    				if (tmp !== null) {
-        				$("#upgenesets").val(tmp);
-    				}
+    				if (tmp !== null) {$("#upgenesets").val(tmp);}
     					
     				tmp = localStorage.getItem("downgenesets");
-    				if (tmp !== null) {
-        				$("#downgenesets").val(tmp);
-    				}
+    				if (tmp !== null) {$("#downgenesets").val(tmp);}
     					
                     tmp = localStorage.getItem("inputTopN");
-                    if (tmp===null) {
-                        tmp=0;
-                    }
+                    if (tmp===null) {tmp=0;}
                     $("#inputTopN").val(tmp);
     			
                     tmp = localStorage.getItem("inputCorrelation");
-                    if (tmp===null) {
-                        tmp=0.05;
-                    }
+                    if (tmp===null) {tmp=0.05;}
                     $("#inputCorrelation").val(tmp);
 
                     tmp = localStorage.getItem("inputpValue");
-                    if (tmp===null) {
-                        tmp=0.05
-                    } 
+                    if (tmp===null) {tmp=0.05} 
                     $("#inputpValue").val(tmp);
 
                     tmp = localStorage.getItem("selectGeneSetCollection"); 
-                    if (tmp===null) {
-                        tmp ="-";
-                    } 
+                    if (tmp===null) {tmp ="-";} 
                     $("#selectGeneSetCollection").val(tmp);
                     tmp_trimmed = tmp.replace(/\s/g, '');
 					$("#selectGeneSetCollection").val(tmp_trimmed);
  					document.getElementById("extraSelectCollection").value = tmp_trimmed;
  					document.getElementById("resultCollection").value = tmp_trimmed;
+ 					document.getElementById("adjustSwitch2").checked = true;
+ 					 
               
                 } else {
                     document.getElementById("radioAnalysis1").checked = true;
                     tmp = localStorage.getItem("inputTopN2");
-                    if (tmp===null) {
-                        tmp=10;
-                    } 
+                    if (tmp===null) {tmp=10;} 
                     $("#inputTopN2").val(tmp);
     			
                     tmp = localStorage.getItem("inputCorrelation2");
-                    if (tmp===null) {
-                        tmp=0.05;
-                    } 
+                    if (tmp===null) {tmp=0.05;} 
                     $("#inputCorrelation2").val(tmp);
 
                     tmp = localStorage.getItem("inputpValue2");
-                    if (tmp===null) {
-                        tmp=0.05;
-                    }
+                    if (tmp===null) {tmp=0.05;}
                     $("#inputpValue2").val(tmp);
 
                     var form2genesetCollection = localStorage.getItem("form2genesetCollection");
@@ -187,40 +183,29 @@
                             $("#textfieldGeneSet").val(form2geneset); 
                         }
                     }
+                    document.getElementById("adjustSwitch1").checked = true;
     			}
                 tmp = localStorage.getItem("selectClusterMethod");
-                if (tmp===null) {
-                    tmp="complete";
-                }
+                if (tmp===null) {tmp="complete";}
                 $("#selectClusterMethod").val(tmp);
                 
                 tmp = localStorage.getItem("checkboxHeatmap");
-                if (tmp===null) {
-                    tmp="true";
-                }
+                if (tmp===null) {tmp="true";}
                 document.getElementById("checkboxHeatmap").checked = (tmp=="true");
                 
                 tmp = localStorage.getItem("checkboxNetwork");
-                if (tmp===null) {
-                    tmp="true";
-                }
+                if (tmp===null) {tmp="true";}
                 document.getElementById("checkboxNetwork").checked = (tmp=="true");
                 
                 tmp = localStorage.getItem("checkboxNetworkLegend");
-                if (tmp===null) {
-                    tmp="true";
-                }
+                if (tmp===null) {tmp="true";}
                 
                 tmp = localStorage.getItem("checkboxGeneList");
-                if (tmp===null) {
-                    tmp="true";
-                }
+                if (tmp===null) {tmp="true";}
                 document.getElementById("checkboxGeneList").checked = (tmp=="true");
                 
                 tmp = localStorage.getItem("checkboxCorrelationTable");
-                if (tmp===null) {
-                    tmp="true";
-                }
+                if (tmp===null) {tmp="true";}
                 document.getElementById("checkboxCorrelationTable").checked = (tmp=="true");
 			}
 
@@ -236,12 +221,13 @@
                 var newCanvas = $newCanvas[0]
                 newCanvas.style.width = '85vh'
                 newCanvas.style.height = '100%'
+                
+                
 //                 newCanvas.style.position = 'absolute'
 //                 newCanvas.style.border = '3px solid rgb(231, 231, 231)'
 //                 newCanvas.style.borderRadius = '5px'
 //                 newCanvas.style.cssFloat = 'left'
                 newCanvas.width = box.offsetWidth - 30;
-//                 console.log("fit", id, newCanvas.width)
 //                 newCanvas.width = document.getElementById("cy").width;
                 newCanvas.height = newCanvas.width - 10;
 //                 newCanvas.width = document.getElementById("divNetwork").innerWidth;
@@ -261,13 +247,11 @@
 //                 var id = selected.id
 //                 var $newCyto = $("<div>")
 //                 $newCyto.attr('id', id)
-// 				   console.log("cytoscape networks!!!")
 //                 $(box).children('div').replaceWith($newCyto)
 //                 var newCyto = $newCyto[0]
 //                 newCyto.style.width = '100%'
 //                 newCyto.width = box.offsetWidth-30;
-//                 console.log("fit", id, newCyto.width)
-//                 console.log("fit", id, newCyto.height)
+
 				if(document.getElementById("checkboxNetwork").checked & 
 				(!document.getElementById("checkboxHeatmap").checked) &
 // 				(!document.getElementById("checkboxNetworkLegend").checked) &
@@ -385,9 +369,7 @@
 				$('#downgenesets').popover('hide');
 				
 				// If this is called from resizing 
-				
-				
-				
+
 				// Empty check
 				if ((document.getElementById("upgenesets").value == '')&&(document.getElementById("downgenesets").value == '')&&(document.getElementById("radioAnalysis2").checked == true)) {
 					alert("Input is empty. Please select a collection and fill in your gene set/s per phenotype");
@@ -474,12 +456,8 @@
 				for(var k = 0; k < formResponse.length; ++k){
 					var indexA, indexB;
 					for (var i = 0; i < outputGenesetNames.length; ++i){
-						if(formResponse[k][0] == outputGenesetNames[i]) {
-							indexA = i;
-						}
-						if(formResponse[k][1] == outputGenesetNames[i]) {
-							indexB = i;
-						}
+						if(formResponse[k][0] == outputGenesetNames[i]) {indexA = i;}
+						if(formResponse[k][1] == outputGenesetNames[i]) {indexB = i;}
 					}
 					correlationMatrix[indexA][indexB] = formResponse[k][2];
 					correlationMatrix[indexB][indexA] = formResponse[k][2];
@@ -544,7 +522,6 @@
 							"varLabelRotate": 0,
 							"margin" : 5,
 // 							"marginBottom" : 20,
-// 							"isOncoprint" : true,
 							"maxSmpStringLen" : 15,
 							"maxVarStringLen": 15,
 							"autoScaleFont" : true,
@@ -555,7 +532,7 @@
 							"disableMenu" : true,
 							"disableToolbar" : true,
 							"resizable" : true,
-							"indicatorCenter" : "white",
+							"indicatorCenter" : "black",
 							"colorSpectrum": myColors,
 							"colorSpectrumZeroValue": 0,
 							"legendInside": true,
@@ -661,26 +638,25 @@
 				
 				$("#table1").show();
 				var t = $('#table1').DataTable({
-					destroy: true,
-					"bAutoWidth": true,
-					"columnDefs": [
+					columnDefs: [
 						{ className: "dt-body-left dt-head-left", "targets": [ 0 ] },
 						{ className: "dt-body-left dt-head-left", "targets": [ 1 ] },
 						{ className: "dt-body-left dt-head-left", "targets": [ 2 ] },
 						{ className: "dt-body-left dt-head-left", "targets": [ 3 ] },
 						{ className: "dt-body-left dt-head-left", "targets": [ 4 ] }
 					],
-					"dom": 'T<"clear">lfrtip',
+					bAutoWidth: true,
+					destroy: true,
+					dom: 'Bfrtip',
 					buttons: [
-				        'copy', 'excel', 'pdf'
-				    ],
-					"tableTools": {
-						"sSwfPath": "swf/copy_csv_xls_pdf.swf"
-					}
+        				'copy', 'excel', 'csv'
+    				]
+	
 				});
 				t.clear();
 				t.rows.add( tableData );
 				t.draw();
+				t.buttons().container().appendTo( $('.col-sm-6:eq(0)', t.table().container() ) );
 				
 				
 				
@@ -995,10 +971,12 @@
 				localStorage.setItem("inputpValue2", $("#inputpValue2").val());
                 localStorage.setItem("form2genesetCollection", $('input:radio[name=form2geneset]:checked').val()); 
                 localStorage.setItem("currentCollection", $("#currentCollection").val());
-                
+                localStorage.setItem("overlap_adj", document.getElementById("adjustSwitch1").checked);
+                localStorage.setItem("overlap_adj", document.getElementById("adjustSwitch2").checked);
             }
             
 			function send(){
+								
 				// Check all modules (prevent missing modu)
 				document.getElementById("checkboxHeatmap").checked = true;
 				document.getElementById("checkboxNetwork").checked = true;
@@ -1044,7 +1022,15 @@
 					$(".result").hide();
 					//$("#divResult").find('*').hide();
 					var parms = {genesets : geneSetsValue, topN : topNValue , pCutOff : pCutOffValue, corrCutOff : corrCutOffValue, geneSetCollection :geneSetCollectionValue};
-					$.getJSON("getCorrelation.jsp", parms).done(handleFormResponse);
+					
+					// If we want adjusted matrix
+					if (document.getElementById("adjustSwitch1").checked) {
+						$.getJSON("getCorrelation.jsp", parms).done(handleFormResponse);
+					}
+					else 
+						$.getJSON("getCorrelationUnadjusted.jsp", parms).done(handleFormResponse);
+					
+					
 				} else {
 					//alert("You have not changed parameters!")
 					handleFormResponse(formResponse);
@@ -1052,11 +1038,17 @@
 			};
 			
 			function sendForm2(){
+				
+				// Switch condition
+				console.log("Switch: " + document.getElementById("adjustSwitch2").checked)
+				
 				// Check all modules (prevent missing module)
 				document.getElementById("checkboxHeatmap").checked = true;
 				document.getElementById("checkboxNetwork").checked = true;
-                saveSettings();               	
+                saveSettings();        
+                
 				var form2genesetCollection = $('input:radio[name=form2geneset]:checked').val();
+								
 				if(form2genesetCollection =="radioPathprint") {
 					form2geneset= $('#selectPathprint').val();
 				} else if (form2genesetCollection == "radioMSigDBC2CP") {
@@ -1068,10 +1060,11 @@
 				} else {
 					form2geneset=$('#textfieldGeneSet').val();
 				}
-				
+
                 localStorage.setItem("form2geneset", form2geneset);
                 
 				var newGeneSetsValue = form2geneset;
+
                 var newGeneSetCollectionValue = "";
 				if(mSigDBC2CPGeneSets.indexOf(newGeneSetsValue) >=0) {
 					newGeneSetCollectionValue = "MSigDBC2CP";
@@ -1114,11 +1107,19 @@
 					$(".result").hide();
 					//$("#divResult").find('*').hide();
 					var parms = {genesets : geneSetsValue, topN : topNValue , pCutOff : pCutOffValue, corrCutOff : corrCutOffValue, geneSetCollection :geneSetCollectionValue};
-					$.getJSON("getCorrelation.jsp", parms).done(handleFormResponse);
+					
+					// If we want adjusted matrix
+					if (document.getElementById("adjustSwitch2").checked) {
+						$.getJSON("getCorrelation.jsp", parms).done(handleFormResponse);
+					}
+					else 
+						$.getJSON("getCorrelationUnadjusted.jsp", parms).done(handleFormResponse);
+					
 				} else {
 					//alert("You have not changed parameters!")
 					handleFormResponse(formResponse);
 				}
+
 			};
 			
 			function updateTable2(geneSetNameValue) {
@@ -1132,7 +1133,6 @@
 			
 			function handleTable2Response(response) {
 				var tableData = response;
-// 				alert(tableData)
 				var tableSelector = '#table2';				
 				for(var k = 0; k < tableData.length; ++k){
 					var entrezid = tableData[k][0];
@@ -1141,17 +1141,17 @@
 					tableData[k][0] = el;				
 				}
 				var t = $(tableSelector).DataTable({
-					destroy: true,
-					"bAutoWidth": true,
-					"columnDefs": [
+					columnDefs: [
 						{ className: "dt-body-left dt-head-left", "targets": [ 0 ] },
 						{ className: "dt-body-left dt-head-left", "targets": [ 1 ] },
 						{ className: "dt-body-left dt-head-left", "targets": [ 2 ] }
 					],
-					"dom": 'T<"clear">lfrtip',		
-					"tableTools": {
-						"sSwfPath": "swf/copy_csv_xls_pdf.swf"
-					}
+					bAutoWidth: true,
+					destroy: true,
+					dom: 'Bfrtip',
+					buttons: [
+        				'copy', 'excel', 'csv'
+    				]	
 				});
 				t.clear();
 				t.rows.add( tableData );
@@ -1163,7 +1163,6 @@
 			}
 			
 			function doneResizing() {
-				//alert("I'm done resizing for the moment");
 				handleFormResponse(formResponse);
 			};
 			
@@ -1180,11 +1179,6 @@
 				$("#divShareButtons").hide();
 			}
 						
-			var resizeTimer;
-			$(window).resize(function() {
-// 				clearTimeout(resizeTimer);
-// 				resizeTimer = setTimeout(doneResizing, 100);
-			});
 			
 			function saveHeatmapAsPNG() {cxHeatmap.print();}
 			function saveNetworkAsJPG() {var jpg = cy.jpg({ full: true });downloadJpg(jpg, "graph_download.jpg");}
@@ -1302,7 +1296,6 @@
 			function centerLayout() {cy.center();cy.fit(cy.nodes());} 
 			
 			function edgewidth() {
-				console.log(edgeWidth)
 				if (edgeWidth == 2) {cy.edges().css({"width":"5"});edgeWidth = 5;}
 				else {cy.edges().css({"width":"2"});edgeWidth = 2;}
 			}
@@ -1393,33 +1386,7 @@
 				        placement: "top",
 				        container: "body"
 				    }); 
-				});
-	
-// 			// How to Explore popover
-// 			$(document).ready(function(){
-// 			    $("#form2").popover({
-// 				        title: '<b>How to <i>Explore</i></b>',
-// 				        placement: "top",
-// 				        trigger: "hover",
-// 				        content : "- Select geneset collection<br>- Select specific geneset (dropdown)<br>- Adjust parameters (if needed)<br>- Press <i><b>Go</b></i>",
-// 				        html: true,
-// 				        container: "body"
-// 				    }); 
-// 			    $("#form2").on("show.bs.popover", function(){ $(this).data("bs.popover").tip().css("max-width", "600px"); });
-// 			});
-			
-// 			// How to Analyze popover
-// 			$(document).ready(function(){
-// 			    $("#form1").popover({
-// 				        title: '<b>How to <i>Analyze</i></b>',
-// 				        placement: "top",
-// 				        trigger: "hover",
-// 				        content : "- Select the correct geneset collection<br>- Input genesets for each phenotype <br>- Adjust parameters (if needed)<br>- Press <i><b>Go</b></i>",
-// 				        html: true,
-// 				        container: "body"
-// 				    });
-// 			   $("#form1").on("show.bs.popover", function(){ $(this).data("bs.popover").tip().css("max-width", "600px"); });
-// 			});
+				}); 
 			
 			// Clustering methods info
 			$(document).ready(function(){
@@ -1536,6 +1503,32 @@
 				}
 			}
 			
+			// Overlap popover 1
+			$(document).ready(function(){
+			    $("#Adjust_overlap_slider1").popover({
+				        title: '<b>Choose adjusted or unadjusted correlation coefficients</b>',
+				        placement: "top",
+				        trigger: "hover",
+				        content : "To allow researchers to identify highly overlapping pathway relationships our web tool provides the option to view a pathway network using unadjusted correlation coefficients (<b>Gray/unchecked</b>) as well as the network built using the partial correlation PCxN method (<b>Blue/checked</b>)." ,
+				        html: true,
+				        container: "body"
+				    });
+			   $("#Adjust_overlap_slider1").on("show.bs.popover", function(){ $(this).data("bs.popover").tip().css("max-width", "600px"); });
+			});	
+			
+			// Overlap popover 2
+			$(document).ready(function(){
+			    $("#Adjust_overlap_slider2").popover({
+				        title: '<b>Choose adjusted or unadjusted correlation coefficients</b>',
+				        placement: "top",
+				        trigger: "hover",
+				        content : "To allow researchers to identify highly overlapping pathway relationships our web tool provides the option to view a pathway network using unadjusted correlation coefficients (<b>Gray/unchecked</b>) as well as the network built using the partial correlation PCxN method (<b>Blue/checked</b>)." ,
+				        html: true,
+				        container: "body"
+				    });
+			   $("#Adjust_overlap_slider2").on("show.bs.popover", function(){ $(this).data("bs.popover").tip().css("max-width", "600px"); });
+			});	
+			
 			// Fill in phenotype 0 with appropriate gene set examples
 			function useUpExamples() {
 				$('#textArea1Info').popover('hide');
@@ -1583,27 +1576,45 @@
 			
 			// Run "Run Example Analysis"
 			function runExample() {
-				document.getElementById("radioAnalysis2").checked = true; //verify this!
-				explore = false;
-				var example_Collection = $("#selectGeneSetCollection");
-				example_Collection.val("MSigDBC2CP");
-				document.getElementById("upgenesets").value = 'KEGG_NOTCH_SIGNALING_PATHWAY\nPID_ANGIOPOIETIN_RECEPTOR_PATHWAY\nPID_RB_1PATHWAY\nPID_PS1_PATHWAY';
-				document.getElementById("downgenesets").value = 'REACTOME_A_TETRASACCHARIDE_LINKER_SEQUENCE_IS_REQUIRED_FOR_GAG_SYNTHESIS\nREACTOME_YAP1_AND_WWTR1_TAZ_STIMULATED_GENE_EXPRESSION\nKEGG_DORSO_VENTRAL_AXIS_FORMATION\nKEGG_FOCAL_ADHESION';
-				document.getElementById("inputTopN").value = 5;
-				document.getElementById("resultCollection").value = "MSigDBC2CP";
+				
+				// Old example that used Analysis
+// 				document.getElementById("radioAnalysis2").checked = true; //verify this!
+// 				explore = false;
+// 				var example_Collection = $("#selectGeneSetCollection");
+// 				example_Collection.val("MSigDBC2CP");
+// 				document.getElementById("upgenesets").value = 'KEGG_NOTCH_SIGNALING_PATHWAY\nPID_ANGIOPOIETIN_RECEPTOR_PATHWAY\nPID_RB_1PATHWAY\nPID_PS1_PATHWAY';
+// 				document.getElementById("downgenesets").value = 'REACTOME_A_TETRASACCHARIDE_LINKER_SEQUENCE_IS_REQUIRED_FOR_GAG_SYNTHESIS\nREACTOME_YAP1_AND_WWTR1_TAZ_STIMULATED_GENE_EXPRESSION\nKEGG_DORSO_VENTRAL_AXIS_FORMATION\nKEGG_FOCAL_ADHESION';
+// 				document.getElementById("inputTopN").value = 5;
+// 				document.getElementById("resultCollection").value = "MSigDBC2CP";
 				
 // 				document.getElementById("inputpValue").value = 0.5;
 // 				document.getElementById("inputCorrelation").value = -0.5;
-				send();
+
+				// New example that usesw explore
+				document.getElementById("radioAnalysis1").checked = true;
+				explore = true;
+				var example_Collection = $("#selectGeneSetCollection");
+				example_Collection.val("MSigDBC2CP");
+				document.getElementById("radioMSigDBC2CP").checked = true;
+				localStorage.setItem("form2geneset", "ADCL");
+                $("#selectMSigDBC2CP").val("ADCL"); 
+				document.getElementById("inputTopN2").value = 10;
+				document.getElementById("inputpValue2").value = 0.05;
+				document.getElementById("inputCorrelation2").value = 0.05;
+				document.getElementById("resultCollection").value = "MSigDBC2CP";
+				//Must set the ajusted overlap 
+				document.getElementById("adjustSwitch2").checked = true
+				
+				sendForm2();
 			}
 			
 			// Popover for "Run Example Analysis"
 			$(document).ready(function(){
 			    $("#divExample").popover({
-				        title: '<b>Analysis Information</b>',
+				        title: '<b>ADCL analysis information</b>',
 				        placement: "bottom",
 				        trigger: "hover",
-				        content : "<b>Collection used</b>:<br>MSigDB C5 GO BP<br><b>Phenotype 0 gene sets</b>: REACTOME_YAP1_AND_WWTR1_TAZ_STIMULATED_GENE_EXPRESSION<br>KEGG_DORSO_VENTRAL_AXIS_FORMATION<br>KEGG_FOCAL_ADHESION<br><b>Phenotype 1 gene sets</b>: REACTOME_YAP1_AND_WWTR1_TAZ_STIMULATED_GENE_EXPRESSION<br>KEGG_DORSO_VENTRAL_AXIS_FORMATION<br>KEGG_FOCAL_ADHESION<br><b>Top correlated gene sets:</b><br>5<br><b>Clustering method:</b><br>Complete Linkage",
+				        content : "Alzheimer's curated gene list drawn from [Y. Pita-Juárez et al.,  The Pathway Coexpression Network: Revealing pathway relationships, 2017]<br><br><b>Find top gene sets</b><br>10<br><b>Select a gene set from MSigDB C2 CP (Canonical pathways)</b> <br>ADCL<br><b>Absolute correlation coefficient greater than</b><br>0.05<br><b>p-value less than</b><br>0.05<br><b>Adjusted for overlap</b><br>On",
 				        html: true,
 				        container: "body"
 				    }); 
@@ -1737,6 +1748,18 @@
 				});
 			
 		}
+			
+			
+		$('input[name=checkbox]').change(function(){
+		    if($(this).is(':checked')) {
+		        // Checkbox is checked..
+		    	localStorage.setItem("overlap_adj", true);
+			} else {
+			        // Checkbox is not checked..
+				localStorage.setItem("overlap_adj", false);
+			}
+		});
+
 		</script>
 </head>
 <body>
@@ -1761,23 +1784,25 @@
 		</div>
 		<div class="row" id="divInput">
 			<div class="col-sm-6">
-				<form id="form2" name="form2" class="well"  style="width:80%;font-size:1m;min-width:513px">
+				<form id="form2" name="form2" class="well"  style="width:80%;font-size:1m;min-width:543px">
 					<label for="inputTopN2" id="findLabel2" style="margin-bottom: 26px;margin-top: 30px"><font color="#e67300">Step 1:</font> Find top</label> <input type="text" id="inputTopN2" value="10" style="border-radius:2px;width:15%"/>
 					<label> gene sets</label><br>
 					<label><font color="#e67300">Step 2:</font> Correlated with</label><br>
-					<input type="radio" id="radioMSigDBH" name="form2geneset" value="radioMSigDBH" style="border-radius:2px;" checked>Select a gene set from MSigDB H (Hallmark gene sets) <br><select id="selectMSigDBH" size="1" style="margin-bottom:5px;width:100%"></select><br>
-					<input type="radio" id="radioMSigDBC2CP" name="form2geneset" value="radioMSigDBC2CP" style="border-radius:2px;" checked>Select a gene set from MSigDB C2 CP (Canonical pathways) <br><select id="selectMSigDBC2CP" size="1" style="margin-bottom:5px;width:100%"></select><br>
-					<input type="radio" id="radioMSigDBC5" name="form2geneset" value="radioMSigDBC5" style="border-radius:2px;">Select a gene set from MSigDB C5 GO BP gene sets <br><select id="selectMSigDBC5" size="1" style="margin-bottom:5px;width:100%"></select><br>
-					<input type="radio" id="radioPathprint" name="form2geneset" value="radioPathprint" style="border-radius:2px;">Select a gene set from Pathprint <br> <select id="selectPathprint" size="1" style="margin-bottom:5px;width:100%"></select><br> 
-					<input type="radio" id="radioSearchGeneSet" name="form2geneset" value="radioSearchGeneSet">Search a gene set <input id="textfieldGeneSet" style="border-radius:2px;margin-bottom: 20px;width:100%"><br>
+					<input type="radio" id="radioMSigDBH" name="form2geneset" value="radioMSigDBH" style="border-radius:4px;" checked>Select a gene set from MSigDB H (Hallmark gene sets) <br><select id="selectMSigDBH" size="1" style="margin-bottom:5px;width:100%"></select><br>
+					<input type="radio" id="radioMSigDBC2CP" name="form2geneset" value="radioMSigDBC2CP" style="border-radius:4px;" checked>Select a gene set from MSigDB C2 CP (Canonical pathways) <br><select id="selectMSigDBC2CP" size="1" style="margin-bottom:5px;width:100%"></select><br>
+					<input type="radio" id="radioMSigDBC5" name="form2geneset" value="radioMSigDBC5" style="border-radius:4px;">Select a gene set from MSigDB C5 GO BP gene sets <br><select id="selectMSigDBC5" size="1" style="margin-bottom:5px;width:100%"></select><br>
+					<input type="radio" id="radioPathprint" name="form2geneset" value="radioPathprint" style="border-radius:4px;">Select a gene set from Pathprint <br> <select id="selectPathprint" size="1" style="margin-bottom:5px;width:100%"></select><br> 
+					<input type="radio" id="radioSearchGeneSet" name="form2geneset" value="radioSearchGeneSet">Search a gene set <input id="textfieldGeneSet" style="border-radius:4px;margin-bottom: 20px;width:100%"><br>
 <!-- 					<input type="radio" id="radioSearchGeneSet" name="form2geneset" value="radioSearchGeneSet">Search a gene set <input id="textfieldGeneSet" onkeypress="hideOptionsAndResults()"  style="border-radius:2px;margin-bottom: 20px;"><br> -->
 					<label id="ste3label"><font color="#e67300">Step 3:</font> </label><br>
-					<label id="label1" for="inputCorrelation2" style="margin-bottom: 12px;">Absolute correlation coefficient greater than </label><input type="text" id="inputCorrelation2" value="0.05" style="border-radius:2px;margin-left:2px;width:15%"/><br>
-					<label id="label2" for="inputpValue2" style="margin-bottom: 13px;">and p-value less than</label><input type="text" id="inputpValue2" value="0.05" style="border-radius:2px;margin-left:2px;width:15%"/><input type="button" class="button-tiny button-rounded button-raised button-action" id="button3" value=" GO "	onclick="javascript:sendForm2();" style="float:right;margin-right:9px;height:25px;padding-left:5px;padding-right:5px;margin-top:45px;" /> <input  class="button-tiny button-rounded button-raised button-caution"type="reset" id="button4" value=" Reset " style="float:right;height:25px;padding-left:5px;padding-right:5px;margin-top:45px;" /> 
+					<label id="label1" for="inputCorrelation2" style="margin-bottom: 12px;">Absolute correlation coefficient greater than </label><input type="text" id="inputCorrelation2" value="0.05" style="border-radius:4px;margin-left:2px;width:8%"/>
+					<label id="labelAdjust" for="inputpValueAdjust" style="margin-bottom: 13px;margin-right: 8px;">, adjust overlap</label><label class="switch">
+					<input id ="adjustSwitch2" type="checkbox"><span id="Adjust_overlap_slider2" class="slider"></span></label><br>
+					<label id="label2" for="inputpValue2" style="margin-bottom: 13px;">and p-value less than</label><input type="text" id="inputpValue2" value="0.05" style="border-radius:4px;margin-left:2px;width:15%"/><input type="button" class="button-tiny button-rounded button-raised button-action" id="button3" value=" GO "	onclick="javascript:sendForm2();" style="float:right;margin-right:9px;height:25px;padding-left:5px;padding-right:5px;margin-top:45px;" /> <input  class="button-tiny button-rounded button-raised button-caution"type="reset" id="button4" value=" Reset " style="float:right;height:25px;padding-left:5px;padding-right:5px;margin-top:45px;" /> 
 				</form>
-				<form id="form1" name="form1" class="well"  style="width:80%;font-size:1m;min-width:513px"> 
+				<form id="form1" name="form1" class="well"  style="width:80%;font-size:1m;min-width:543px"> 
 					<label for="selectGeneSetCollection" style="margin-bottom: 13px;"><font color="#e67300">Step 1:</font>   Select gene set collection: </label>
-					<select id="selectGeneSetCollection" size="1" style="height: 25px;border-radius:2px;width:49.5%">
+					<select id="selectGeneSetCollection" size="1" style="height: 25px;border-radius:4px;width:49.5%">
 						<option value="-" >-</option>
 						<option value="MSigDBC2CP">MSigDB C2 CP (Canonical pathways)</option>
 						<option value="pathprint">Pathprint</option>
@@ -1785,15 +1810,17 @@
 						<option value="MSigDBC5">MSigDB C5 GO BP gene sets</option>
 					</select><br>
 					<label for="upgenesets" style="display: inline;"><font color="#e67300">Step 2:</font> Find correlation among gene sets up-regulated in phenotype 0 </label><br>
-					<textarea rows="7" cols="50" id="upgenesets" data-toggle="popover" style="width:98%;border-radius:2px;"></textarea><i class="fa fa-info-circle" aria-hidden="true" id="textArea1Info" style="padding-left: 5px;cursor: pointer;display: inline;float:right;position:absolute;padding-top:5px;"></i><br> 
+					<textarea rows="7" cols="50" id="upgenesets" data-toggle="popover" style="width:98%;border-radius:4px;"></textarea><i class="fa fa-info-circle" aria-hidden="true" id="textArea1Info" style="padding-left: 5px;cursor: pointer;display: inline;float:right;position:absolute;padding-top:5px;"></i><br> 
 					<label for="downgenesets" style="">and gene sets	up-regulated in phenotype 1 (optional) </label><br>
-					<textarea rows="7" cols="50" id="downgenesets" data-toggle="popover" style="width:98%;margin-bottom: 5px;border-radius:2px;"></textarea><i class="fa fa-info-circle" fa-2x aria-hidden="true" id="textArea2Info" style="padding-left: 5px;cursor: pointer;display: inline;float:right;position:absolute;padding-top:5px;"></i><br>
-					<label for="inputTopN" style="margin-bottom: 13px;"><font color="#e67300">Step 3:</font> Top</label> <input type="text" id="inputTopN" value="0" style="border-radius:2px;" />
+					<textarea rows="7" cols="50" id="downgenesets" data-toggle="popover" style="width:98%;margin-bottom: 5px;border-radius:4px;"></textarea><i class="fa fa-info-circle" fa-2x aria-hidden="true" id="textArea2Info" style="padding-left: 5px;cursor: pointer;display: inline;float:right;position:absolute;padding-top:5px;"></i><br>
+					<label for="inputTopN" style="margin-bottom: 13px;"><font color="#e67300">Step 3:</font> Top</label> <input type="text" id="inputTopN" value="0" style="border-radius:4px;" />
 					<label>correlated genes sets</label><br>
-					<label for="inputCorrelation" style="margin-bottom: 13px;border-radius:2px;"> with absolute correlation coefficient greater than</label>
-					<input type="text" id="inputCorrelation" value="0.05" style="width:25%;border-radius:2px;"/><br>
-					<label for="inputpValue" style="margin-bottom: 13px;border-radius:2px;">and p-value less than</label>
-					<input type="text" id="inputpValue" value="0.05" style="border-radius:2px;"/><br>
+					<label for="inputCorrelation" style="margin-bottom: 13px;border-radius:4px;">Absolute correlation coefficient greater than</label>
+					<input type="text" id="inputCorrelation" value="0.05" style="width:8%;border-radius:4px;"/>
+					<label id="labelAdjust" for="inputpValueAdjust" style="margin-bottom: 13px;margin-right: 8px;">, adjust overlap</label><label class="switch">
+					<input id = "adjustSwitch1" type="checkbox"><span id="Adjust_overlap_slider1" class="slider"></span></label><br>
+					<label for="inputpValue" style="margin-bottom: 13px;border-radius:4px;">and p-value less than</label>
+					<input type="text" id="inputpValue" value="0.05" style="border-radius:4px;"/><br>
 
 					<label for="selectClusterMethod">Cluster gene sets using</label> <select id="selectClusterMethod" size="1" style="height: 25px;">
 						<option value="average">Average linkage</option>
@@ -1805,14 +1832,14 @@
 					<input type="button" class="button-tiny button-rounded button-raised button-action" id="button1" value=" GO " onclick="javascript:send();" style="float:right;margin-right:9px;height:25px;padding-left:5px;padding-right:5px"/><input type="reset" class="button-tiny button-rounded button-raised button-caution" id="button2" value=" Reset " style="float:right;height:25px;padding-left:5px;padding-right:5px; "/> 
 				</form>
 							
-				<form class="form-inline" id="extraOptions" style="width: 80%;float: right;position: relative;min-width:513px">
+				<form class="form-inline" id="extraOptions" style="width: 80%;float: right;position: relative;min-width:543px">
 					<input id="findGeneset" placeholder="&#xF002    Search geneset name and add it to a phenotype" class="well col-sm-7" style ="width:70%;float:right;border-top-left-radius: 0px;border-bottom-left-radius: 0px;font-family: FontAwesome;font-style: normal;font-weight: normal;text-decoration: inherit;"  data-toggle="popover" data-placement="bottom" title =""></input>		
 					<input id="extraSelectCollection" class="well" value="-" style="height:60px;float:left;background: #EEE;border-top-right-radius: 0px;border-bottom-right-radius: 0px;text-align:center;width:30%;"  disabled></input>	
 				</form>				
 			</div>
 			<div class="col-sm-6" style="height:550px">
-				<input class="col-sm-12 well button button-glow" type="button" value="&#xf04b Run Example Analysis" onclick="runExample();" style="font-family: FontAwesome;border-radius:4px;min-height:131px;height:24%;font-size: x-large;margin-bottom: 13px;width:80%;min-width:513px" id="divExample";></input>
-				<div class="col-sm-12 well" style="border-radius: 4px;margin-bottom: 12px;width:80%;min-width:513px;height:34%;" id="divAnalysis1">
+				<input class="col-sm-12 well button button-glow" type="button" value="&#xf04b Run example analysis" onclick="runExample();" style="font-family: FontAwesome;border-radius:4px;min-height:131px;height:24%;font-size: x-large;margin-bottom: 13px;width:80%;min-width:543px" id="divExample";></input>
+				<div class="col-sm-12 well" style="border-radius: 4px;margin-bottom: 12px;width:80%;min-width:543px;height:34%;" id="divAnalysis1">
 					<h4>
 						<input type="radio" id="radioAnalysis1" name="radioAnalysis"
 							value="radioAnalysis1" checked><label for="radioAnalysis1"> Explore</label>
@@ -1832,7 +1859,7 @@
 					</p>
 				</div>
 <!-- 				<div class="col-sm-12"><br></div> -->
-				<div class="col-sm-12 well" style="border-radius: 4px;margin-bottom: 12px;width:80%;min-width:513px;height:34%" id="divAnalysis2">
+				<div class="col-sm-12 well" style="border-radius: 4px;margin-bottom: 12px;width:80%;min-width:543px;height:34%" id="divAnalysis2">
 					<h4>
 						<input type="radio" id="radioAnalysis2" name="radioAnalysis"
 							value="radioAnalysis2"><label for="radioAnalysis2"> Analyze</label>
@@ -2054,7 +2081,7 @@
 			</div>
 			
 		</div>
-		<div id="navMenu" class="navigation_arrows">
+		<div id="navMenu" class="navigation_arrows button-glow">
 		  	  <button onClick ="scrollWin('upperLevel')" class="button button-block button-small button-rounded button-border" style="padding-left:10px;padding-right:10px;background:white;"><i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i> Heatmap/Network</button>
 	  		  <button onClick ="scrollWin('divGeneList')" class="button button-block button-small button-rounded button-border" style="padding-left:25px;padding-right:25px;background:white;"><i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i> Gene set list</button>
 	  		  <button onClick ="scrollWin('divTable1')" class="button button-block button-small button-rounded button-border"style="padding-left:7px;padding-right:7px;background:white;"><i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i> Network data Table</button>
@@ -2080,8 +2107,6 @@
 			$('#radioSearchGeneSet').prop('checked', true);
 			showForm2LowerPart();
 		}				
-// 		$( "#textfieldGeneSet" ).on( "autocompleteselect", geneSetSearchCompleted);
-// 		$( "#textfieldGeneSet" ).on( "autocompleteselect", geneSetSearchCompleted);
 		
 		document.getElementById("selectPathprint").addEventListener("change", changeRadioSelection);
 		document.getElementById("selectMSigDBC2CP").addEventListener("change", changeRadioSelection);
