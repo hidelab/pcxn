@@ -455,6 +455,7 @@
 						explore_mode = localStorage.getItem("explore")
 						analyze_mode = !localStorage.getItem("explore")
 						
+						//EDW
 						if ((slide2_on && explore_mode)||(slide1_on && analyze_mode)) {
 							correlationMatrix[i][j] = 0;
 						}
@@ -1520,7 +1521,9 @@
 				        title: '<b>Choose adjusted or unadjusted correlation coefficients</b>',
 				        placement: "top",
 				        trigger: "hover",
-				        content : "To identify highly overlapping pathway relationships view a pathway network using unadjusted correlation coefficients (<b>Gray/unchecked</b>), otherwise opt for the network built using the partial correlation PCxN method (<b>Blue/checked</b>)." ,
+				        content: function () {
+				            return 'To identify highly overlapping pathway relationships view a pathway network using unadjusted correlation coefficients (<img src="scr_gray_slider.png" style="width:30px;height:20px;">), otherwise use the partial correlation PCxN method (<img src="scr_blue_slider.png" style="width:30px;height:20px;">) ';
+				          },
 				        html: true,
 				        container: "body"
 				    });
@@ -1533,8 +1536,9 @@
 				        title: '<b>Choose adjusted or unadjusted correlation coefficients</b>',
 				        placement: "top",
 				        trigger: "hover",
-				        content : "To identify highly overlapping pathway relationships view a pathway network using unadjusted correlation coefficients (<b>Gray/unchecked</b>), otherwise opt for the network built using the partial correlation PCxN method (<b>Blue/checked</b>)." ,
-				        html: true,
+				        content: function () {
+				            return 'To identify highly overlapping pathway relationships view a pathway network using unadjusted correlation coefficients (<img src="scr_gray_slider.png" style="width:30px;height:20px;">), otherwise use the partial correlation PCxN method (<img src="scr_blue_slider.png" style="width:30px;height:20px;">) ';
+				        		},				        html: true,
 				        container: "body"
 				    });
 			   $("#Adjust_overlap_slider2").on("show.bs.popover", function(){ $(this).data("bs.popover").tip().css("max-width", "600px"); });
