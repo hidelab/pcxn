@@ -23,7 +23,7 @@ fontshape=sl,formatcom=\color{midnightblue}, fontsize=\small}
 \begin{document}
 \SweaveOpts{concordance=TRUE}
 \title{About pcxn}
-\author{Sokratis Kariotis}
+\author{Sokratis Kariotis, Yered Pita-Juarez, Winston Hide, Wenbin Wei}
 \maketitle
 \tableofcontents
 \section{Description}
@@ -65,32 +65,35 @@ p-value allowed.
 
 <<queries>>=
 # Select a query gene set from a specific collection while requesting 
-# the 10 most correlated neighbors and specific cut-offs for minimum absolute 
+# the 10 most correlated neighbors, whether the correlation coefficients are 
+# adjusted for gene overlap and specific cut-offs for minimum absolute 
 # correlation and maximum p-value
 
 library(pcxn)
 library(pcxnData)
 
-data(list = c("pathprint.Hs.gs","pheatmap",
+data(list = c("pathprint.Hs.gs",
                 "pathCor_pathprint_v1.2.3_dframe",
-                "pathCor_CPv5.1_dframe", "gobp_gs_v5.1",
-                "PathCor", "p.value", "Pathway.A",
-                "Pathway.B"))
+                "pathCor_pathprint_v1.2.3_unadjusted_dframe",
+                "pathCor_CPv5.1_dframe", "gobp_gs_v5.1"))
 
 pcxn.obj <- pcxn_explore(collection = "pathprint",
                         query_geneset = "Alzheimer's disease (KEGG)",
+                        adj_overlap = TRUE,
                         top = 10,
                         min_abs_corr = 0.05,
                         max_pval = 0.05)
 
 # Select one or two pathway groups from a specific collection while requesting 
-# the 10 most correlated neighbors and specific cut-offs for minimum absolute 
+# the 10 most correlated neighbors, whether the correlation coefficients are 
+# adjusted for gene overlap and specific cut-offs for minimum absolute 
 # correlation and maximum p-value
 
 pcxn.obj <- pcxn_analyze("pathprint",c("ABC transporters (KEGG)",
                                         "ACE Inhibitor Pathway (Wikipathways)",
                                         "AR down reg. targets (Netpath)"),
-                            c("DNA Repair (Reactome)"), 10, 0.05, 0.05)
+                                    c("DNA Repair (Reactome)"), 
+                                    adj_overlap = FALSE, 10, 0.05, 0.05)
 @
 
 \subsection{Acquire gene members}

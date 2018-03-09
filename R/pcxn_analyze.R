@@ -29,6 +29,8 @@ utils::globalVariables(c("pathprint.Hs.gs","pheatmap",
 #' @param collection pathway's collection
 #' @param phenotype_0_genesets genesets/pathways of the first group of pathways
 #' @param phenotype_1_genesets genesets/pathways of the second group of pathways
+#' @param adj_overlap whether the correlation coefficients are adjusted for gene
+#' overlap
 #' @param top most correlated genesets/pathways
 #' @param min_abs_corr minimum absolute correlation
 #' @param max_pval maximum p-value
@@ -40,13 +42,14 @@ utils::globalVariables(c("pathprint.Hs.gs","pheatmap",
 #' \dontrun{
 #'  pcxn_analyze("pathprint",c("ABC transporters (KEGG)",
 #'  "ACE Inhibitor Pathway (Wikipathways)","AR down reg. targets (Netpath)"),
-#'   c("DNA Repair (Reactome)"), 10, 0.05, 0.05)
+#'   adj_overlap = TRUE, c("DNA Repair (Reactome)"), 10, 0.05, 0.05)
 #' }
 
 pcxn_analyze <-
     function(collection = c("pathprint","MSigDB_H","MSigDB_C2_CP",
                             "MSigDB_C5_GO_BP"),
                 phenotype_0_genesets = NULL,phenotype_1_genesets = NULL,
+                adj_overlap = FALSE,
                 top = 10,
                 min_abs_corr = 0.05,
                 max_pval = 0.05 ) {
@@ -56,13 +59,17 @@ pcxn_analyze <-
                     phenotype_1_genesets arguments")
         
         pathprint.Hs.gs.rda <- NULL
-        pathCor_Hv5.1_dframe <- NULL
-        pathCor_GOBPv5.1_dframe <- NULL
+        pathprint.Hs.gs <- NULL
         h_gs_v5.1 <- NULL
         cp_gs_v5.1 <- NULL
         gobp_gs_v5.1.rda <- NULL
-        pathprint.Hs.gs <- NULL
+        
+        pathCor_Hv5.1_dframe <- NULL
+        pathCor_GOBPv5.1_dframe <- NULL
         pathCor_CPv5.1_dframe.rda  <- NULL
+        pathCor_Hv5.1_unadjusted_dframe <- NULL
+        pathCor_GOBPv5.1_unadjusted_dframe <- NULL
+        pathCor_CPv5.1_unadjusted_dframe.rda  <- NULL
         
         # loading the datasets, when the package is complete  use data(...)
         correct_genesets_flag_1 <- TRUE
@@ -72,26 +79,53 @@ pcxn_analyze <-
                                     "MSigDB_C5_GO_BP")
         
         if ( collection == "pathprint" ) {
-            data(pathCor_pathprint_v1.2.3_dframe, envir = environment())
-            matrix <- pathCor_pathprint_v1.2.3_dframe
+            if ( adj_overlap ) {
+                data(pathCor_pathprint_v1.2.3_dframe, envir = environment())
+                matrix <- pathCor_pathprint_v1.2.3_dframe
+            }
+            else {
+                data(pathCor_pathprint_v1.2.3_unadjusted_dframe, 
+                    envir = environment())
+                matrix <- pathCor_pathprint_v1.2.3_unadjusted_dframe 
+            }
+            
             data(pathprint.Hs.gs, envir = environment())
             names <- names(pathprint.Hs.gs)
         }
         if ( collection == "MSigDB_H" ) {
-            data(pathCor_Hv5.1_dframe, envir = environment())
-            matrix <- pathCor_Hv5.1_dframe
+            if ( adj_overlap ) {
+                data(pathCor_Hv5.1_dframe, envir = environment())
+                matrix <- pathCor_Hv5.1_dframe
+            }
+            else {
+                data(pathCor_Hv5.1_unadjusted_dframe, envir = environment())
+                matrix <- pathCor_Hv5.1_unadjusted_dframe 
+            }
+                
             data(h_gs_v5.1, envir = environment())
             names <- names(h_gs_v5.1)
         }
         if ( collection == "MSigDB_C2_CP" ) {
-            data(pathCor_CPv5.1_dframe, envir = environment())
-            matrix <- pathCor_CPv5.1_dframe
+            if ( adj_overlap ) {
+                data(pathCor_CPv5.1_dframe, envir = environment())
+                matrix <- pathCor_CPv5.1_dframe
+            }
+            else {
+                data(pathCor_CPv5.1_unadjusted_dframe, envir = environment())
+                matrix <- pathCor_CPv5.1_unadjusted_dframe 
+            }
             data(cp_gs_v5.1, envir = environment())
             names <- names(cp_gs_v5.1)
         }
         if ( collection == "MSigDB_C5_GO_BP" ) {
-            data(pathCor_GOBPv5.1_dframe, envir = environment())
-            matrix <- pathCor_GOBPv5.1_dframe
+            if ( adj_overlap ) {
+                data(pathCor_GOBPv5.1_dframe, envir = environment())
+                matrix <- pathCor_GOBPv5.1_dframe
+            }
+            else {
+                data(pathCor_GOBPv5.1_unadjusted_dframe, envir = environment())
+                matrix <- pathCor_GOBPv5.1_unadjusted_dframe 
+            }
             data(gobp_gs_v5.1.rda, envir = environment())
             names <- names(gobp_gs_v5.1)
         }

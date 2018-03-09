@@ -9,6 +9,7 @@ correlation relationships among multiple pathways/gene sets.}
 pcxn_explore(collection = c("pathprint", "MSigDB_H","MSigDB_C2_CP",
                             "MSigDB_C5_GO_BP"),
             query_geneset,
+            adj_overlap = FALSE,
             top = 10,
             min_abs_corr = 0.05,
             max_pval = 0.05)
@@ -17,6 +18,7 @@ pcxn_analyze(collection = c("pathprint", "MSigDB_H","MSigDB_C2_CP",
                             "MSigDB_C5_GO_BP"),
             phenotype_0_genesets,
             phenotype_1_genesets,
+            adj_overlap = FALSE,
             top = 10,
             min_abs_corr = 0.05,
             max_pval = 0.05)
@@ -33,6 +35,9 @@ pcxn_analyze(collection = c("pathprint", "MSigDB_H","MSigDB_C2_CP",
 
 \item{phenotype_1_genesets}{genesets/pathways of the second group of pathways}
 
+\item{adj_overlap}{whether the correlation coefficients are adjusted for gene
+overlap}
+
 \item{top}{most correlated genesets/pathways}
 
 \item{min_abs_corr}{minimum absolute correlation}
@@ -46,7 +51,7 @@ a pcxn object
 
 \references{
 Pita-Juarez Y.,Altschuler G.,Kariotis S.,Wei W.,Koler K.,Tanzi R.
-and W. A. Hide (2017). "The Pathway Coexpression Network: Revealing Pathway
+and W. A. Hide (2018). "The Pathway Coexpression Network: Revealing Pathway
 Relationships."
 }
 
@@ -72,7 +77,7 @@ pcxn_explore("pathprint","Alzheimer's disease (KEGG)")
 
 
 # If specific parameters are desired we can use the full list of arguments:
-pcxn_explore("pathprint","Alzheimer's disease (KEGG)",
+pcxn_explore("pathprint","Alzheimer's disease (KEGG)", FALSE,
                                 100, 0.02, 0.045)
 
 # pcxn_analyze can be used with two gene sets and the default parameters:
@@ -89,6 +94,7 @@ pcxn_analyze("pathprint",c("ABC transporters (KEGG)",
                             "ACE Inhibitor Pathway (Wikipathways)",
                             "AR down reg. targets (Netpath)"),
                             c("DNA Repair (Reactome)"),
+                            FALSE,
                             top = 100,
                             min_abs_corr = 0.025,
                             max_pval = 0.03)
