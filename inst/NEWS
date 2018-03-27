@@ -6,3 +6,4 @@
 
 - Current pathway/gene set collections (as seen in the official website http://pcxn.org:8080/): MSigDB H hallmark, MSigDB C2 (Canonical pathways), MSigDB C5 GO BP and Pathprint)
 
+- Since February 2018 using the updated version of pcxnData that includes pathway correlation unadjusted for overlapping genes

@@ -15,8 +15,8 @@ MSigDB C2 Canonical pathways, MSigDB C5 GO BP and Pathprint).
 \tabular{ll}{
 Package: \tab pcxn\cr
 Type: \tab Package\cr
-Version: \tab 1.0.0\cr
-Date: \tab 2017-10-31\cr
+Version: \tab 2.0.0\cr
+Date: \tab 2018-4-1\cr
 License: \tab MIT\cr
 }
 }
@@ -26,7 +26,7 @@ Sokratis Kariotis, Yered Pita-Juarez, Winston Hide, Wenbin Wei
 }
 \references{
 Pita-Juarez Y.,Altschuler G.,Kariotis S.,Wei W.,Koler K.,Tanzi R.
-and W. A. Hide (2017). "The Pathway Coexpression Network: Revealing Pathway
+and W. A. Hide (2018). "The Pathway Coexpression Network: Revealing Pathway
 Relationships."
 }
 \keyword{ package }
@@ -36,25 +36,59 @@ library(pcxnData)
 
 # load  the data
 ds = c("cp_gs_v5.1", "gobp_gs_v5.1", "h_gs_v5.1","pathprint.Hs.gs",
-    "pathCor_CPv5.1_dframe","pathCor_GOBPv5.1_dframe","pathCor_Hv5.1_dframe",
-    "pathCor_pathprint_v1.2.3_dframe")
+    "pathCor_CPv5.1_dframe",
+    "pathCor_CPv5.1_unadjusted_dframe",
+    "pathCor_GOBPv5.1_dframe",
+    "pathCor_GOBPv5.1_unadjusted_dframe",
+    "pathCor_Hv5.1_dframe",
+    "pathCor_Hv5.1_unadjusted_dframe",
+    "pathCor_pathprint_v1.2.3_dframe",
+    "pathCor_pathprint_v1.2.3_unadjusted_dframe")
+    
 data(list = ds)
 
-# Explore the static extendable network by focusing on single pathways and their
+# Explore the static extendable network (correlation coefficients are adjusted 
+# for gene overlap) by focusing on single pathways and their 10 most correlated
+# neighbours in the pathprint collection
+pcxn.obj <- pcxn_explore(collection = "pathprint",
+                    query_geneset = "Alzheimer's disease (KEGG)",
+                    adj_overlap = TRUE,
+                    top = 10,
+                    min_abs_corr = 0.05,
+                    max_pval = 0.05)
+
+# Explore the static extendable network (correlation coefficients are  not 
+# adjusted for gene overlap) by focusing on single pathways and their
 # 10 most correlated neighbours in the pathprint collection
 pcxn.obj <- pcxn_explore(collection = "pathprint",
                     query_geneset = "Alzheimer's disease (KEGG)",
+                    adj_overlap = FALSE,
                     top = 10,
                     min_abs_corr = 0.05,
                     max_pval = 0.05)
 
 # Analyse relationships between groups of pathways shown to be enriched in the
-# collection by gene set enrichment
+# collection by gene set enrichment (correlation coefficients are adjusted 
+# for gene overlap)
 pcxn.obj <- pcxn_analyze(collection = "pathprint",
             phenotype_0_genesets = c("ABC transporters (KEGG)",
                                     "ACE Inhibitor Pathway (Wikipathways)",
                                     "AR down reg. targets (Netpath)"),
             phenotype_1_genesets = c("DNA Repair (Reactome)"),
+            adj_overlap = TRUE,
+            top = 10,
+            min_abs_corr = 0.05,
+            max_pval = 0.05 )
+
+# Analyse relationships between groups of pathways shown to be enriched in the
+# collection by gene set enrichment (correlation coefficients are not adjusted 
+# for gene overlap)
+pcxn.obj <- pcxn_analyze(collection = "pathprint",
+            phenotype_0_genesets = c("ABC transporters (KEGG)",
+                                    "ACE Inhibitor Pathway (Wikipathways)",
+                                    "AR down reg. targets (Netpath)"),
+            phenotype_1_genesets = c("DNA Repair (Reactome)"),
+            adj_overlap = FALSE,
             top = 10,
             min_abs_corr = 0.05,
             max_pval = 0.05 )

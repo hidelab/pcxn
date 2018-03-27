@@ -12,8 +12,11 @@
 # - The initial data.frame is filtered by minimum absolute correlation
 # and maximum p-value
 
-utils::globalVariables(c("pathprint.Hs.gs", "pathCor_Hv5.1_dframe",
-                        "h_gs_v5.1", "cp_gs_v5.1","pathCor_GOBPv5.1_dframe"))
+utils::globalVariables(c("pathprint.Hs.gs", "pathCor_Hv5.1_dframe", 
+                        "pathCor_Hv5.1_unadjusted_dframe",
+                        "h_gs_v5.1","cp_gs_v5.1", "cp_gs_v5.1",
+                        "pathCor_GOBPv5.1_dframe",
+                        "pathCor_GOBPv5.1_unadjusted_dframe"))
 
 #' Select a single pathway/gene set from one of the four collections ( MSigDB H
 #' hallmark gene sets, MSigDB C2 Canonical pathways, MSigDB C5 GO BP gene sets,
@@ -22,6 +25,8 @@ utils::globalVariables(c("pathprint.Hs.gs", "pathCor_Hv5.1_dframe",
 #'
 #' @param collection pathways' collection
 #' @param query_geneset the single pathway of interest
+#' @param adj_overlap whether the correlation coefficients are adjusted for gene
+#' overlap
 #' @param top most correlated genesets/pathways
 #' @param min_abs_corr minimum absolute correlation
 #' @param max_pval maximum p-value
@@ -31,13 +36,14 @@ utils::globalVariables(c("pathprint.Hs.gs", "pathCor_Hv5.1_dframe",
 #'
 #' @examples
 #' \dontrun{
-#'  pcxn<- pcxn_explore("pathprint","Alzheimer's disease (KEGG)", 10,
-#'  0.05, 0.05)
+#'  pcxn<- pcxn_explore("pathprint","Alzheimer's disease (KEGG)",
+#'  adj_overlap = TRUE, 10, 0.05, 0.05)
 #' }
 
 pcxn_explore <- function(collection = c("pathprint","MSigDB_H","MSigDB_C2_CP",
                                         "MSigDB_C5_GO_BP"),
                         query_geneset,
+                        adj_overlap = FALSE,
                         top = 10,
                         min_abs_corr = 0.05,
                         max_pval = 0.05) {
@@ -50,31 +56,81 @@ pcxn_explore <- function(collection = c("pathprint","MSigDB_H","MSigDB_C2_CP",
     acceptable_collections = c("pathprint","MSigDB_H","MSigDB_C2_CP",
                                 "MSigDB_C5_GO_BP")
     if ( collection == "pathprint" ) {
-        data(pathCor_pathprint_v1.2.3_dframe, envir = environment())
-        matrix <- pathCor_pathprint_v1.2.3_dframe
+        if ( adj_overlap ) {
+            data(pathCor_pathprint_v1.2.3_dframe, envir = environment())
+            matrix <- pathCor_pathprint_v1.2.3_dframe 
+        }
+        else {
+            data(pathCor_pathprint_v1.2.3_unadjusted_dframe, 
+                envir = environment())
+            matrix <- pathCor_pathprint_v1.2.3_unadjusted_dframe 
+        }
+
         data(pathprint.Hs.gs, envir = environment())
         if (  query_geneset %in% names(pathprint.Hs.gs) )
             correct_query_geneset_flag <- TRUE
     }
     if ( collection == "MSigDB_H" ) {
-        data(pathCor_Hv5.1_dframe, envir = environment())
-        matrix <- pathCor_Hv5.1_dframe
-        data(h_gs_v5.1.rda, envir = environment())
-        if (  query_geneset %in% names(h_gs_v5.1) )
+        if ( adj_overlap ) {
+            data(pathCor_Hv5.1_dframe, envir = environment())
+            matrix <- pathCor_Hv5.1_dframe
+        }
+        else {
+            data(pathCor_Hv5.1_unadjusted_dframe, envir = environment())
+            matrix <- pathCor_Hv5.1_unadjusted_dframe 
+        }
+        
+        tryCatch({
+            data(h_gs_v5.1.rda, envir = environment())
+        }, warning = function(w) {
+        }, error = function(e) {
+        }, finally = {
+            data('h_gs_v5.1', envir = environment())
+        })
+        
+        if ( query_geneset %in% names(h_gs_v5.1) )
             correct_query_geneset_flag <- TRUE
     }
     if ( collection == "MSigDB_C2_CP" ) {
-        data(pathCor_CPv5.1_dframe, envir = environment())
-        matrix <- pathCor_CPv5.1_dframe
-        data(cp_gs_v5.1.rda, envir = environment())
+        if ( adj_overlap ) {
+            data(pathCor_CPv5.1_dframe, envir = environment())
+            matrix <- pathCor_CPv5.1_dframe
+        }
+        else {
+            data(pathCor_CPv5.1_unadjusted_dframe, envir = environment())
+            matrix <- pathCor_CPv5.1_unadjusted_dframe 
+        }
+        
+        tryCatch({
+            data(cp_gs_v5.1.rda, envir = environment())
+        }, warning = function(w) {
+        }, error = function(e) {
+        }, finally = {
+            data('cp_gs_v5.1', envir = environment())
+        })
+        
         if (  query_geneset %in% names(cp_gs_v5.1) )
             correct_query_geneset_flag <- TRUE
     }
     if ( collection == "MSigDB_C5_GO_BP" ) {
-        data(pathCor_GOBPv5.1_dframe.rda, envir = environment())
-        matrix <- pathCor_GOBPv5.1_dframe
-        data(gobp_gs_v5.1, envir = environment())
-        if (  query_geneset %in% names(gobp_gs_v5.1) )
+        if ( adj_overlap ) {
+            data(pathCor_GOBPv5.1_dframe, envir = environment())
+            matrix <- pathCor_GOBPv5.1_dframe
+        }
+        else {
+            data(pathCor_GOBPv5.1_unadjusted_dframe, envir = environment())
+            matrix <- pathCor_GOBPv5.1_unadjusted_dframe 
+        }
+        
+        tryCatch({
+            data(gobp_gs_v5.1.rda, envir = environment())
+        }, warning = function(w) {
+        }, error = function(e) {
+        }, finally = {
+            data('gobp_gs_v5.1', envir = environment())
+        })
+        
+        if ( query_geneset %in% names(gobp_gs_v5.1) )
             correct_query_geneset_flag <- TRUE
     }
     

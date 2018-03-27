@@ -11,18 +11,22 @@
 # represented by edge width
 
 utils::globalVariables(c("igraph", "layout_in_circle","make_graph","V","V<-",
-                            "tkplot"))
+                            "tkplot","E","<-E",
+                            "pathCor_pathprint_v1.2.3_unadjusted_dframe",
+                            "pathCor_CPv5.1_unadjusted_dframe"))
 
 #' Create a network of a pcxn object
 #'
 #' @param object pcxn object created by explore or analyze functions
 #'
-#' @return tkplot object representing the network
+#' @return draws a tkplot object and saves a graph object 
+#' representing the network
 #' @export
 #'
 #' @examples
 #' # Create a network of a pcxn object
-#' object <- pcxn_explore("pathprint","Alzheimer's disease (KEGG)", 10, 0.05, 0.05)
+#' object <- pcxn_explore("pathprint","Alzheimer's disease (KEGG)", 
+#' 10, 0.05, 0.05)
 #' 
 #' # network <- pcxn_network(object)
 #' 
@@ -36,7 +40,8 @@ pcxn_network <- function(object) {
     for (i in 1:nrow(object@data)) {
         edges <- c(edges, object@data[i,1])
         edges <- c(edges, object@data[i,2])
-        edge_thickness <- c(edge_thickness, abs(as.numeric(object@data[i,3]) * 10))
+        edge_thickness <- c(edge_thickness, 
+                            abs(as.numeric(object@data[i,3]) * 10))
         if(as.numeric(object@data[i,3]) < 0) edge_color <- c(edge_color, "blue")
         else edge_color <- c(edge_color, "red")
     }
@@ -82,10 +87,14 @@ pcxn_network <- function(object) {
         }
     }
     
-    # drawing the plot
-    plot <- igraph::tkplot(graph, layout= igraph::layout_in_circle, 
+    # drawing the plot    
+    plot <- igraph::tkplot(graph, layout= igraph::layout_in_circle,
                         width = NULL,
                         height = NULL,
                         edge.width = edge_thickness, edge.color = edge_color)
-    return(plot)
+    
+    igraph::E(graph)$colour=edge_color
+    igraph::E(graph)$width=edge_thickness
+    
+    return(graph)
 }

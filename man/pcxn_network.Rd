@@ -4,20 +4,23 @@
 \alias{pcxn_network}
 \title{Create a network of a pcxn object}
 \usage{
-pcxn_network(df)
+pcxn_network(object)
 }
 \arguments{
-\item{df}{pcxn object created by explore or analyze functions}
+\item{object}{pcxn object created by explore or analyze functions}
 }
 \value{
-tkplot object representing the network
+draws a tkplot object and saves a graph object 
+representing the network
 }
 \description{
 Create a network of a pcxn object
 }
 \examples{
 # Create a network of a pcxn object
-df <- pcxn_explore("pathprint","Alzheimer's disease (KEGG)", 10, 0.05, 0.05)
+object <- pcxn_explore("pathprint","Alzheimer's disease (KEGG)", 
+10, 0.05, 0.05)
 
-# network <- pcxn_network(df)
+# network <- pcxn_network(object)
+
 }
